@@ -1,0 +1,30 @@
+{
+  "manufacturer": "SinaSalvatrice",
+  "keyboard_name": "ICST7789V Display Test",
+  "maintainer": "SinaSalvatrice",
+  "processor": "RP2040",
+  "bootloader": "rp2040",
+  "usb": {
+    "vid": "0xFEED",
+    "pid": "0x7789",
+    "device_version": "0.1.0"
+  },
+  "features": {
+    "bootmagic": false,
+    "extrakey": false,
+    "mousekey": false,
+    "nkro": false
+  },
+  "matrix_pins": {
+    "direct": [
+      ["GP26"]
+    ]
+  },
+  "layouts": {
+    "LAYOUT": {
+      "layout": [
+        {"matrix": [0, 0], "x": 0, "y": 0}
+      ]
+    }
+  }
+}
