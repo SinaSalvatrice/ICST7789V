@@ -1,0 +1,53 @@
+name: Build UF2
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ghcr.io/qmk/qmk_cli
+
+    steps:
+      - name: Disable git safe-directory checks
+        run: git config --global --add safe.directory '*'
+
+      - name: Checkout QMK firmware
+        uses: actions/checkout@v4
+        with:
+          repository: qmk/qmk_firmware
+          ref: master
+          submodules: recursive
+          path: qmk_firmware
+
+      - name: Checkout ICST7789V
+        uses: actions/checkout@v4
+        with:
+          path: project
+
+      - name: Install keyboard definition into QMK
+        run: |
+          rm -rf qmk_firmware/keyboards/icst7789v
+          cp -R project/keyboards/icst7789v qmk_firmware/keyboards/icst7789v
+
+      - name: Compile QMK firmware
+        working-directory: qmk_firmware
+        run: qmk compile -kb icst7789v -km default
+
+      - name: Collect UF2
+        run: |
+          mkdir -p artifact
+          find qmk_firmware -type f -name '*.uf2' -exec cp {} artifact/ \;
+          test -n "$(find artifact -maxdepth 1 -type f -name '*.uf2' -print -quit)"
+          ls -lh artifact
+
+      - name: Upload UF2 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ICST7789V-UF2
+          path: artifact/*.uf2
+          if-no-files-found: error
