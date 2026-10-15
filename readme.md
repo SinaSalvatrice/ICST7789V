@@ -40,7 +40,54 @@ keyboards/icst7789v/
       └─ keymap.c
 ```
 
-This repository stores the custom keyboard definition separately from the main QMK repository. To build it, copy `keyboards/icst7789v` into a QMK Firmware checkout under `keyboards/icst7789v`, then run:
+## Build UF2 locally on Windows
+
+The repository contains `build_uf2.bat`.
+
+Requirements:
+
+- QMK CLI available in `PATH`
+- QMK toolchain installed
+- a `qmk_firmware` checkout
+
+The script looks for `qmk_firmware` in these locations, in order:
+
+1. `%QMK_HOME%`
+2. `./qmk_firmware`
+3. `../qmk_firmware`
+4. `%USERPROFILE%/qmk_firmware`
+5. `C:/qmk_firmware`
+
+If your checkout lives somewhere else, set it before building, for example:
+
+```bat
+set QMK_HOME=C:\GitHub\qmk_firmware
+build_uf2.bat
+```
+
+A successful build creates:
+
+```text
+build/ICST7789V.uf2
+```
+
+## Self-hosted GitHub Actions build
+
+`.github/workflows/build-uf2.yml` uses only a Windows self-hosted runner:
+
+```text
+[self-hosted, Windows, X64]
+```
+
+The runner must already have QMK CLI and the ARM GCC toolchain installed and available in `PATH`. The workflow checks out QMK Firmware locally on that runner, calls `build_uf2.bat`, and uploads the resulting UF2 as the `ICST7789V-UF2` artifact.
+
+No GitHub-hosted runner is used.
+
+If Actions are completely disabled for the repository/account, use `build_uf2.bat` directly instead.
+
+## Manual QMK build
+
+You can also copy `keyboards/icst7789v` into a QMK Firmware checkout under `keyboards/icst7789v`, then run:
 
 ```bash
 qmk compile -kb icst7789v -km default
