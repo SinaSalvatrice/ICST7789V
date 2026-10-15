@@ -2,7 +2,7 @@
 
 Minimal QMK test project for an RP2040-Zero and a 1.14-inch ST7789V SPI TFT (135x240).
 
-The first firmware does only one useful thing: it initializes the display and draws a calibration pattern. No keypad logic yet.
+The first firmware initializes the display and draws a calibration pattern. No keypad logic yet.
 
 ## Wiring
 
@@ -21,18 +21,16 @@ The first firmware does only one useful thing: it initializes the display and dr
 
 ## Display setup
 
-The panel is treated as 135x240 and rotated 90 degrees to produce a 240x135 landscape canvas. The initial viewport offset is set to `(40, 53)`, which is a common value for this ST7789 panel size. If the image is shifted or clipped, adjust the two offset constants in `keyboards/icst7789v/keymaps/default/keymap.c`.
+The panel is treated as 135x240 and rotated 90 degrees to produce a 240x135 landscape canvas. The initial viewport offset is `(40, 53)`. If the image is shifted or clipped, adjust the two offset constants in `keyboards/icst7789v/keymaps/default/keymap.c`.
 
-The startup image is intentionally a calibration pattern: border, center cross and four colored corner blocks. That makes rotation, clipping, offsets and color order obvious immediately.
+The startup image is a calibration pattern: border, center cross and four colored corner blocks. That makes rotation, clipping, viewport offsets and color order obvious immediately.
 
 ## QMK source layout
-
-The keyboard definition lives in:
 
 ```text
 keyboards/icst7789v/
 ├─ config.h
-├─ info.json
+├─ keyboard.json
 ├─ mcuconf.h
 ├─ rules.mk
 └─ keymaps/
@@ -40,30 +38,30 @@ keyboards/icst7789v/
       └─ keymap.c
 ```
 
+The project uses QMK's current `keyboard.json` format.
+
 ## Build UF2 locally on Windows
 
-The repository contains `build_uf2.bat`.
+Required on the machine:
 
-Requirements:
+- QMK MSYS installed at `C:\QMK_MSYS`
+- a QMK Firmware checkout, by default `%USERPROFILE%\qmk_firmware`
 
-- QMK CLI available in `PATH`
-- QMK toolchain installed
-- a `qmk_firmware` checkout
-
-The script looks for `qmk_firmware` in these locations, in order:
-
-1. `%QMK_HOME%`
-2. `./qmk_firmware`
-3. `../qmk_firmware`
-4. `%USERPROFILE%/qmk_firmware`
-5. `C:/qmk_firmware`
-
-If your checkout lives somewhere else, set it before building, for example:
+Then simply run from this repository:
 
 ```bat
-set QMK_HOME=C:\GitHub\qmk_firmware
 build_uf2.bat
 ```
+
+The build deliberately initializes only the QMK submodules required for this RP2040 target:
+
+- `lib/chibios`
+- `lib/chibios-contrib`
+- `lib/pico-sdk`
+- `lib/lufa`
+- `lib/printf`
+
+It does **not** recursively download unrelated platform SDKs such as the large NXP `mcux-sdk`.
 
 A successful build creates:
 
@@ -71,36 +69,41 @@ A successful build creates:
 build/ICST7789V.uf2
 ```
 
+If QMK Firmware lives somewhere else:
+
+```bat
+set QMK_HOME=C:\path\to\qmk_firmware
+build_uf2.bat
+```
+
 ## Self-hosted GitHub Actions build
 
-`.github/workflows/build-uf2.yml` uses only a Windows self-hosted runner:
+`.github/workflows/build-uf2.yml` uses only:
 
 ```text
 [self-hosted, Windows, X64]
 ```
 
-The runner must already have QMK CLI and the ARM GCC toolchain installed and available in `PATH`. The workflow checks out QMK Firmware locally on that runner, calls `build_uf2.bat`, and uploads the resulting UF2 as the `ICST7789V-UF2` artifact.
+It uses the persistent QMK installation on the self-hosted Windows runner and calls the same `build_uf2.bat`. It does not check out a second full QMK tree on every run.
 
-No GitHub-hosted runner is used.
-
-If Actions are completely disabled for the repository/account, use `build_uf2.bat` directly instead.
+If Actions are disabled entirely, the BAT file is the normal local build path.
 
 ## Manual QMK build
 
-You can also copy `keyboards/icst7789v` into a QMK Firmware checkout under `keyboards/icst7789v`, then run:
+After copying `keyboards/icst7789v` into `qmk_firmware/keyboards/icst7789v`, the equivalent QMK build is:
 
 ```bash
-qmk compile -kb icst7789v -km default
+make SKIP_GIT=1 icst7789v:default
 ```
 
-The output for RP2040 is a `.uf2` file that can be copied to the board while it is in BOOTSEL mode.
+The `SKIP_GIT=1` flag skips QMK's full recursive submodule scan; `build_uf2.sh` initializes the required RP2040 dependencies explicitly before building.
 
 ## Current scope
 
 - RP2040 / RP2040-Zero
 - ST7789V via SPI0
 - Quantum Painter
-- display-only test
+- display-only calibration test
 - one unused placeholder matrix pin on GP26 so QMK has a valid minimal keyboard definition
 
 The 9-key matrix and macros come later.
