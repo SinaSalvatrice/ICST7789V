@@ -15,29 +15,13 @@ jobs:
       - name: Checkout ICST7789V
         uses: actions/checkout@v4
 
-      - name: Checkout QMK firmware
-        uses: actions/checkout@v4
-        with:
-          repository: qmk/qmk_firmware
-          ref: master
-          submodules: recursive
-          path: qmk_firmware
-
-      - name: Verify local QMK toolchain
+      - name: Build UF2 on Kampfzwerg
         shell: cmd
-        run: |
-          where qmk
-          where arm-none-eabi-gcc
-
-      - name: Build UF2 locally on runner
-        shell: cmd
-        env:
-          QMK_HOME: ${{ github.workspace }}\qmk_firmware
         run: call build_uf2.bat
 
       - name: Upload UF2 artifact
         uses: actions/upload-artifact@v4
         with:
           name: ICST7789V-UF2
-          path: build\*.uf2
+          path: build\ICST7789V.uf2
           if-no-files-found: error
