@@ -1,11 +1,18 @@
 #pragma once
 
-// Use SPI0 on exposed RP2040-Zero pins.
-#define SPI_DRIVER SPID0
-#define SPI_SCK_PIN GP2
-#define SPI_MOSI_PIN GP3
-#define SPI_MISO_PIN GP0
+#define SPI_DRIVER SPID1
+#define SPI_SCK_PIN GP14   // Serieller Takt (SCL/SCK)
+#define SPI_MOSI_PIN GP15  // Datenausgang (SDA/MOSI)
+#define SPI_MISO_PIN GP12  // Kann ungepinnt bleiben (Display sendet meist nichts)
 
-// Keep the display awake indefinitely for the bench test.
-#define QUANTUM_PAINTER_DISPLAY_TIMEOUT 0
-#define ST7789_NUM_DEVICES 1
+// Display-Steuerpins (Frei wählbare GPIOs)
+#define ST7789_CS_PIN GP13     // Chip Select (CS)
+#define ST7789_DC_PIN GP11     // Data/Command (DC/RS)
+#define ST7789_RESET_PIN GP10  // Reset (RST)
+
+// Display-Eigenschaften (Beispiel für ein typisches 240x240 Panel)
+#define LCD_WIDTH 240
+#define LCD_HEIGHT 240
+
+// Falls die Farben invertiert sind (häufig bei ST7789 der Fall), dies aktivieren:
+#define LCD_INVERT_COLOR
