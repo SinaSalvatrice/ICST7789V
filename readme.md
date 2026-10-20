@@ -1,109 +1,52 @@
-# ICST7789V
+# ICST7789V — ST7789V an RP2040-Zero testen
 
-Minimal QMK test project for an RP2040-Zero and a 1.14-inch ST7789V SPI TFT (135x240).
+**Neuer Referenztest (ohne QMK):** Der am ESP32 erfolgreich getestete Adafruit-Farbwechsel wurde für den **Waveshare RP2040-Zero** portiert. Der Arduino-Sketch liegt in [`arduino/ST7789V_RP2040_Zero_Test/ST7789V_RP2040_Zero_Test.ino`](arduino/ST7789V_RP2040_Zero_Test/ST7789V_RP2040_Zero_Test.ino).
 
-The first firmware initializes the display and draws a calibration pattern. No keypad logic yet.
+Die älteren QMK-/Pico-SDK-Tests bleiben im Repository erhalten. Sie werden durch den Arduino-Test nicht überschrieben.
 
-## Wiring
+## Verkabelung (RP2040-Zero ↔ ST7789V 135×240, 8 Pins)
 
-| Display | RP2040-Zero | Note |
+| ST7789V-Pin | RP2040-Zero | Funktion |
 |---|---|---|
-| GND | GND | common ground |
-| VCC | 3V3 | use 3.3 V |
-| SCL | GP2 | SPI0 SCK |
-| SDA | GP3 | SPI0 MOSI |
-| RES | GP6 | display reset |
-| DC | GP5 | data/command |
-| CS | GP4 | chip select |
-| BLK | 3V3 | backlight always on |
+| GND | GND | Masse |
+| VCC | **3V3** | 3,3-V-Versorgung, **nicht 5 V** |
+| SCL | **GP2** | SPI0 Clock / SCK |
+| SDA | **GP3** | SPI0 MOSI / TX |
+| CS | **GP4** | Chip Select |
+| DC | **GP5** | Data / Command |
+| RES | **GP6** | Hardware Reset |
+| BLK | **3V3** | Hintergrundbeleuchtung dauerhaft an |
 
-`SCL` and `SDA` are SPI clock/data on this module, despite the I2C-looking labels.
+Auf diesem Display sind **SCL und SDA SPI-Leitungen, nicht I²C**. Falls CS beim vorigen Versuch an GND und RES an 3V3 lagen, **bei ausgeschalteter Versorgung** wieder auf GP4 und GP6 zurückstecken. GP2/GP3 sind die **GPIO-Nummern**, nicht Position 2/3 am Board.
 
-## Display setup
+## Arduino IDE — ohne QMK
 
-The panel is treated as 135x240 and rotated 90 degrees to produce a 240x135 landscape canvas. The initial viewport offset is `(40, 53)`. If the image is shifted or clipped, adjust the two offset constants in `keyboards/icst7789v/keymaps/default/keymap.c`.
+1. Unter **Datei → Voreinstellungen → Zusätzliche Boardverwalter-URLs** hinzufügen:
+   `https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json`
+2. Im Boardverwalter das Paket **Raspberry Pi Pico/RP2040** von **Earle F. Philhower** installieren.
+3. Als Board **Waveshare RP2040 Zero** auswählen (nicht ESP32).
+4. Im Bibliotheksverwalter installieren: **Adafruit ST7735 and ST7789 Library**, **Adafruit GFX Library** und ggf. deren Abhängigkeit **Adafruit BusIO**.
+5. Die `.ino`-Datei öffnen, RP2040-Zero per USB verbinden und **Hochladen** wählen. Bei Uploadproblemen: BOOT-Taste beim USB-Anstecken gedrückt halten, dann erneut hochladen (UF2-Bootloader).
+6. Optional den seriellen Monitor mit **115200 Baud** öffnen.
 
-The startup image is a calibration pattern: border, center cross and four colored corner blocks. That makes rotation, clipping, viewport offsets and color order obvious immediately.
+**Erwartung:** Der Bildschirm wechselt alle zwei Sekunden zwischen **Rot → Grün → Blau → Weiß → Schwarz**. Der Sketch benutzt **SPI0** auf GP2/GP3, **keine QMK-Firmware**, dieselben Adafruit-Bibliotheken und dieselbe Displayinitialisierung `init(135, 240)` / `setRotation(1)` wie der erfolgreiche ESP32-Test.
 
-## QMK source layout
+## Fehlerdiagnose
 
-```text
-keyboards/icst7789v/
-├─ config.h
-├─ keyboard.json
-├─ mcuconf.h
-├─ rules.mk
-└─ keymaps/
-   └─ default/
-      └─ keymap.c
-```
+- **Farben erscheinen:** Display, RP2040-SPI0 und Displayleitungen sind grundsätzlich okay; den Fehler danach im QMK-Treiber bzw. dessen Initialisierung suchen.
+- **Weiterhin schwarz:** Die ESP32-Verdrahtung bzw. -Pins funktionieren nicht automatisch am RP2040. RP2040-GPIO-Belegung und Spannung/Signalfluss am Display prüfen; wenn nötig Hardware-SPI mit langsamem GPIO-Test vergleichen.
+- **Bild verschoben:** Erst nach erfolgreichem Farbtest Rotation / Panel-Offsets prüfen.
 
-The project uses QMK's current `keyboard.json` format.
+## Ältere QMK-Testfirmware (unverändert)
 
-## Build UF2 locally on Windows
+Das Projekt enthält unter `keyboards/icst7789v/` den bisherigen QMK-/Quantum-Painter-Test und die bisherigen Windows-/Shell-Buildskripte `build_uf2.bat` und `build_uf2.sh`. **Diese bauen QMK, nicht den neuen Arduino-Sketch.**
 
-Required on the machine:
-
-- QMK MSYS installed at `C:\QMK_MSYS`
-- a QMK Firmware checkout, by default `%USERPROFILE%\qmk_firmware`
-
-Then simply run from this repository:
-
-```bat
-build_uf2.bat
-```
-
-The build deliberately initializes only the QMK submodules required for this RP2040 target:
-
-- `lib/chibios`
-- `lib/chibios-contrib`
-- `lib/pico-sdk`
-- `lib/lufa`
-- `lib/printf`
-
-It does **not** recursively download unrelated platform SDKs such as the large NXP `mcux-sdk`.
-
-A successful build creates:
-
-```text
-build/ICST7789V.uf2
-```
-
-If QMK Firmware lives somewhere else:
-
-```bat
-set QMK_HOME=C:\path\to\qmk_firmware
-build_uf2.bat
-```
-
-## Self-hosted GitHub Actions build
-
-`.github/workflows/build-uf2.yml` uses only:
-
-```text
-[self-hosted, Windows, X64]
-```
-
-It uses the persistent QMK installation on the self-hosted Windows runner and calls the same `build_uf2.bat`. It does not check out a second full QMK tree on every run.
-
-If Actions are disabled entirely, the BAT file is the normal local build path.
-
-## Manual QMK build
-
-After copying `keyboards/icst7789v` into `qmk_firmware/keyboards/icst7789v`, the equivalent QMK build is:
+QMK-Minimalbuild aus einem vorhandenen QMK-Firmware-Checkout:
 
 ```bash
 make SKIP_GIT=1 icst7789v:default
 ```
 
-The `SKIP_GIT=1` flag skips QMK's full recursive submodule scan; `build_uf2.sh` initializes the required RP2040 dependencies explicitly before building.
+Die vorhandenen Tests schalten den ST7789V derzeit auf eine rote Testfläche (je nach lokalem Stand sind weitere Pico-SDK-Diagnosen separat vorhanden). Sie sind **nicht** das jetzt empfohlene Referenzverfahren zum Hardware-Bring-up.
 
-## Current scope
-
-- RP2040 / RP2040-Zero
-- ST7789V via SPI0
-- Quantum Painter
-- display-only calibration test
-- one unused placeholder matrix pin on GP26 so QMK has a valid minimal keyboard definition
-
-The 9-key matrix and macros come later.
+**Hinweis:** Dieser Arduino-Sketch prüft nur das Display. Die 9-Tasten-Matrix, VIA, Makros und Tastaturfunktionen des „Nine-Key Macro Master“ werden damit nicht geflasht.
