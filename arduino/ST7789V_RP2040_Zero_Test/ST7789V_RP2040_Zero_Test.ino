@@ -56,6 +56,10 @@ void setup() {
   // Set these BEFORE SPI.begin() / tft.init().
   SPI.setSCK(TFT_SCLK);
   SPI.setTX(TFT_MOSI);
+  // RP2040-Zero defaults MISO to GP4, which this display uses for CS.
+  // Move unused MISO to GP0 so SPI.begin() cannot take over the CS pin.
+  // Leave GP0 unconnected; the display does not need MISO.
+  SPI.setRX(0);
   SPI.begin();
 
   tft.init(135, 240);
