@@ -1,52 +1,82 @@
-# ICST7789V — ST7789V an RP2040-Zero testen
+# ICST7789V — Waveshare RP2040-Zero / ST7789 hardware tester
 
-**Neuer Referenztest (ohne QMK):** Der am ESP32 erfolgreich getestete Adafruit-Farbwechsel wurde für den **Waveshare RP2040-Zero** portiert. Der Arduino-Sketch liegt in [`arduino/ST7789V_RP2040_Zero_Test/ST7789V_RP2040_Zero_Test.ino`](arduino/ST7789V_RP2040_Zero_Test/ST7789V_RP2040_Zero_Test.ino).
+The **QMK module diagnostic** in `keyboards/icst7789v/` targets the **new 320×240 landscape ST7789 with EC11 encoder + PUSH + K0**. It is intentionally separate from the older **135×240 8-pin Arduino test** in `arduino/`, which remains untouched as a reference.
 
-Die älteren QMK-/Pico-SDK-Tests bleiben im Repository erhalten. Sie werden durch den Arduino-Test nicht überschrieben.
+## Hardware already connected
 
-## Verkabelung (RP2040-Zero ↔ ST7789V 135×240, 8 Pins)
+Use the GPIO labels printed on the RP2040-Zero board, **not Raspberry Pi Pico 40-pin header numbers**.
 
-| ST7789V-Pin | RP2040-Zero | Funktion |
+| Module signal | RP2040-Zero | Notes |
 |---|---|---|
-| GND | GND | Masse |
-| VCC | **3V3** | 3,3-V-Versorgung, **nicht 5 V** |
-| SCL | **GP2** | SPI0 Clock / SCK |
-| SDA | **GP3** | SPI0 MOSI / TX |
-| CS | **GP4** | Chip Select |
-| DC | **GP5** | Data / Command |
-| RES | **GP6** | Hardware Reset |
-| BLK | **3V3** | Hintergrundbeleuchtung dauerhaft an |
+| GND | GND | Common ground |
+| VCC | 3V3 | Safe 3.3-V supply |
+| SCL / SCK | GP2 | SPI0 clock |
+| SDA / MOSI | GP3 | SPI0 TX, **not I2C** |
+| RES / RST | GP4 | Display reset |
+| DC | GP5 | Data / Command |
+| CS | GP6 | SPI chip select |
+| BLK | GP7 | Backlight driven HIGH |
+| Encoder A | GP8 | EC11 |
+| Encoder B | GP9 | EC11 |
+| Encoder PUSH | GP10 | Switch to GND |
+| K0 | GP11 | Switch to GND |
 
-Auf diesem Display sind **SCL und SDA SPI-Leitungen, nicht I²C**. Falls CS beim vorigen Versuch an GND und RES an 3V3 lagen, **bei ausgeschalteter Versorgung** wieder auf GP4 und GP6 zurückstecken. GP2/GP3 sind die **GPIO-Nummern**, nicht Position 2/3 am Board.
+**The display uses native 240×320 geometry and QP rotation 90° for 320×240 landscape.** The GP4/GP6 CS/RST mapping is for the **new module**, not the old Arduino sketch.
 
-## Arduino IDE — ohne QMK
+## What the QMK test firmware does
 
-1. Unter **Datei → Voreinstellungen → Zusätzliche Boardverwalter-URLs** hinzufügen:
-   `https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json`
-2. Im Boardverwalter das Paket **Raspberry Pi Pico/RP2040** von **Earle F. Philhower** installieren.
-3. Als Board **Waveshare RP2040 Zero** auswählen (nicht ESP32).
-4. Im Bibliotheksverwalter installieren: **Adafruit ST7735 and ST7789 Library**, **Adafruit GFX Library** und ggf. deren Abhängigkeit **Adafruit BusIO**.
-5. Die `.ino`-Datei öffnen, RP2040-Zero per USB verbinden und **Hochladen** wählen. Bei Uploadproblemen: BOOT-Taste beim USB-Anstecken gedrückt halten, dann erneut hochladen (UF2-Bootloader).
-6. Optional den seriellen Monitor mit **115200 Baud** öffnen.
+- **Status:** display boot/init, encoder CW/CCW counters, encoder push count, K0 count, and matrix key events. The display only redraws on events (no continual full-screen flashing).
+- **Colors:** RED / GREEN / BLUE / WHITE / BLACK. Rotate the encoder to enter the page and press its shaft to advance the color.
+- **Geometry:** borders, diagonals, and all four corners to check display rotation/clipping.
+- **Matrix:** a 3×4 grid for **eleven keys** and event counter. It is already defined but does not require switches to be wired at boot.
+- **NeoPixel:** an optional WS2812/SK6812 chain on GP29. The screen shows 'not enabled' until RGBLIGHT is enabled. Press the encoder shaft on this page to cycle colors after LEDs are connected.
+- **K0** always returns to the status page. Rotate the encoder to change pages.
 
-**Erwartung:** Der Bildschirm wechselt alle zwei Sekunden zwischen **Rot → Grün → Blau → Weiß → Schwarz**. Der Sketch benutzt **SPI0** auf GP2/GP3, **keine QMK-Firmware**, dieselben Adafruit-Bibliotheken und dieselbe Displayinitialisierung `init(135, 240)` / `setRotation(1)` wie der erfolgreiche ESP32-Test.
+The diagnostics firmware still uses normal QMK key scanning. When you attach switches, they send the default keycodes defined in `keymaps/default/keymap.c` (currently number keys / Enter). The dedicated panel buttons are **not** part of the keyboard matrix.
 
-## Fehlerdiagnose
+## GPIO expansion plan
 
-- **Farben erscheinen:** Display, RP2040-SPI0 und Displayleitungen sind grundsätzlich okay; den Fehler danach im QMK-Treiber bzw. dessen Initialisierung suchen.
-- **Weiterhin schwarz:** Die ESP32-Verdrahtung bzw. -Pins funktionieren nicht automatisch am RP2040. RP2040-GPIO-Belegung und Spannung/Signalfluss am Display prüfen; wenn nötig Hardware-SPI mit langsamem GPIO-Test vergleichen.
-- **Bild verschoben:** Erst nach erfolgreichem Farbtest Rotation / Panel-Offsets prüfen.
+| Function | GPIOs | Status |
+|---|---|---|
+| TFT SPI + control | GP2–GP7 | Active |
+| Encoder A/B + PUSH + K0 | GP8–GP11 | Active |
+| Matrix rows (3) | GP12, GP13, GP14 | Reserved/configured |
+| Matrix columns (4) | GP15, GP26, GP27, GP28 | Reserved/configured |
+| Optional external NeoPixel DIN | GP29 | Reserved; disabled in firmware |
+| Spare | GP0, GP1 | Unused |
 
-## Ältere QMK-Testfirmware (unverändert)
+**Matrix diode direction: COL2ROW.** The diode cathode (stripe) faces the row wire. Matrix key positions are 4 + 4 + 3; the last key is wide physically but electrically still a single switch, with [row 2, column 3] unused. This is a provisional electrical layout and can be adapted to the eventual enclosure.
 
-Das Projekt enthält unter `keyboards/icst7789v/` den bisherigen QMK-/Quantum-Painter-Test und die bisherigen Windows-/Shell-Buildskripte `build_uf2.bat` und `build_uf2.sh`. **Diese bauen QMK, nicht den neuen Arduino-Sketch.**
+NeoPixels require a proper shared ground, adequate **external power** for the number of LEDs, and preferably a 3.3-to-5 V logic-level shifter if powered at 5 V. **Do not feed 5 V into RP2040 GPIO.**
 
-QMK-Minimalbuild aus einem vorhandenen QMK-Firmware-Checkout:
+## QMK UF2 build
 
-```bash
-make SKIP_GIT=1 icst7789v:default
+The repository is a **QMK keyboard definition**, not a full QMK checkout. The Windows self-hosted CI and `build_uf2.bat`/`build_uf2.sh` copy `keyboards/icst7789v` into a separate QMK checkout. Windows:
+
+```bat
+build_uf2.bat
 ```
 
-Die vorhandenen Tests schalten den ST7789V derzeit auf eine rote Testfläche (je nach lokalem Stand sind weitere Pico-SDK-Diagnosen separat vorhanden). Sie sind **nicht** das jetzt empfohlene Referenzverfahren zum Hardware-Bring-up.
+With an already configured QMK checkout, after copying `keyboards/icst7789v` into its `keyboards/` folder:
 
-**Hinweis:** Dieser Arduino-Sketch prüft nur das Display. Die 9-Tasten-Matrix, VIA, Makros und Tastaturfunktionen des „Nine-Key Macro Master“ werden damit nicht geflasht.
+```sh
+qmk compile -kb icst7789v -km default
+```
+
+This produces a UF2 file (the Windows script copies to `build/ICST7789V.uf2`). To flash, unplug the RP2040-Zero, hold BOOT while plugging USB in, and copy the UF2 to the RPI-RP2 drive.
+
+### Optional NeoPixels
+
+Only **after wiring the LED data line to GP29**, change `RGBLIGHT_ENABLE = no` to `RGBLIGHT_ENABLE = yes` in `keyboards/icst7789v/rules.mk`. The RP2040 uses the **PIO WS2812 driver** (`WS2812_DRIVER = vendor`). Set the real LED count in `config.h` (`RGBLIGHT_LED_COUNT`, initially 1). Rebuild and flash. Matrix and NeoPixels have non-overlapping pins.
+
+### Troubleshooting
+
+- **Black screen**: verify 3V3/GND, BLK=GP7, SPI0 GP2/GP3, DC=GP5, CS=GP6 and RST=GP4. If the Arduino sketch runs but QMK doesn't, check the QMK SPI/Quantum Painter build logs before moving wires.
+- **Screen rotated wrong**: change `QP_ROTATION_90` to `QP_ROTATION_270` in `keymap.c`.
+- **Encoder backwards**: swap GP8/GP9 wiring or add `#define ENCODER_DIRECTION_FLIP` in `config.h`.
+- **No encoder steps**: try changing `resolution` from 4 to 2 in `keyboard.json`.
+- **Build fails**: the original keymap had a duplicated device variable, stray statements outside a function, mismatched panel size, and the wrong SPI driver. Those have been corrected in this branch.
+
+## Legacy independent tests
+
+The old `arduino/ST7789V_RP2040_Zero_Test/ST7789V_RP2040_Zero_Test.ino` still targets a **different 135×240 panel** with different CS/RES wiring. `diag_pico/` is also preserved.
