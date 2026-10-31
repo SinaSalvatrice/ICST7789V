@@ -2,6 +2,7 @@
 // No external matrix keys or NeoPixels are required to boot.
 #include QMK_KEYBOARD_H
 #include "qp.h"
+#include "qp_st7789.h"
 #include "timer.h"
 #include <stdio.h>
 
@@ -34,7 +35,9 @@ static uint16_t cw_count = 0;
 static uint16_t ccw_count = 0;
 static uint16_t key_count = 0;
 static uint8_t last_key = 0;
+#ifdef RGBLIGHT_ENABLE
 static uint8_t neo_hue = 0;
+#endif
 
 typedef struct {
     bool sample;
@@ -189,9 +192,9 @@ static void draw_matrix(void) {
 }
 
 static void draw_neopixel(void) {
-    char buf[25];
     draw_header("NEOPIXEL");
 #ifdef RGBLIGHT_ENABLE
+    char buf[25];
     paint_text(12, 58, "ENABLED GP29", 2, 85, 255, 255);
     snprintf(buf, sizeof(buf), "HUE:%u", (unsigned)neo_hue);
     paint_text(12, 100, buf, 2, 0, 0, 255);
@@ -219,7 +222,7 @@ static void draw_page(void) {
 }
 
 static void process_button(pin_t pin, button_t *button, bool is_encoder_push) {
-    bool raw = readPin(pin); // HIGH idle, LOW pressed.
+    bool raw = gpio_read_pin(pin); // HIGH idle, LOW pressed.
     if (raw != button->sample) {
         button->sample = raw;
         button->changed = timer_read();
@@ -245,10 +248,10 @@ static void process_button(pin_t pin, button_t *button, bool is_encoder_push) {
 }
 
 void keyboard_post_init_user(void) {
-    setPinOutput(TFT_BL_PIN);
-    writePinHigh(TFT_BL_PIN);
-    setPinInputHigh(ENCODER_PUSH_PIN);
-    setPinInputHigh(TFT_K0_PIN);
+    gpio_set_pin_output(TFT_BL_PIN);
+    gpio_write_pin_high(TFT_BL_PIN);
+    gpio_set_pin_input_high(ENCODER_PUSH_PIN);
+    gpio_set_pin_input_high(TFT_K0_PIN);
 
     display = qp_st7789_make_spi_device(TFT_WIDTH, TFT_HEIGHT, TFT_CS_PIN, TFT_DC_PIN, TFT_RST_PIN, 4, 0);
     if (display && qp_init(display, QP_ROTATION_90)) {
