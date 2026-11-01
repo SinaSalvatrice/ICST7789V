@@ -36,6 +36,7 @@ static void cc_encoder_press_action(void) {
 
 // All 11 macro keys participate in Tap Dance; K0 is not a matrix key.
 static void cc_tap_finished(tap_dance_state_t *state, void *data) {
+    (void)data;
     const uint8_t index = state->index;
     if (index >= CC_KEY_COUNT) return;
     if (state->count >= 3 && index == 10) {
@@ -60,6 +61,7 @@ static void cc_tap_finished(tap_dance_state_t *state, void *data) {
 }
 
 static void cc_tap_reset(tap_dance_state_t *state, void *data) {
+    (void)data;
     const uint8_t index = state->index;
     if (index < CC_KEY_COUNT && cc_held_code[index] != KC_NO) {
         unregister_code16(cc_held_code[index]);
