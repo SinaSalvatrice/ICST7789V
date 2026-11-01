@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 320 240">
+<rect width="320" height="240" fill="#10151C"/><rect width="320" height="27" fill="#18242E"/>
+<text x="7" y="18" font-family="Arial" font-size="10" font-weight="bold" fill="#F0F7FA">CC / LAYERS</text>
+<rect x="265" y="5" width="44" height="17" rx="6" fill="#284149"/>
+<text x="287" y="17" text-anchor="middle" font-family="Arial" font-size="9" fill="#75E2D5">DISP</text>
+<rect x="7" y="33" width="109" height="171" rx="8" fill="#1C2D38"/>
+<text x="17" y="70" font-family="Arial" font-size="17" font-weight="bold" fill="#59DAD1">MODULE</text>
+<text x="15" y="110" font-family="Arial" font-size="10" fill="#FFFFFF">K0 ONLY</text>
+<text x="16" y="169" font-family="Arial" font-size="10" fill="#EFD078">NO USB</text>
+<rect x="125" y="36" width="187" height="29" rx="3" fill="#2C5262"/>
+<rect x="125" y="36" width="4" height="29" fill="#59DAD1"/>
+<text x="141" y="55" font-family="Arial" font-size="11" font-weight="bold" fill="#F0F7FA">DISPLAY</text>
+<rect x="125" y="70" width="187" height="29" rx="3" fill="#253844"/>
+<rect x="125" y="70" width="4" height="29" fill="#527582"/>
+<text x="141" y="89" font-family="Arial" font-size="11" font-weight="bold" fill="#F0F7FA">ENCODER</text>
+<rect x="125" y="104" width="187" height="29" rx="3" fill="#253844"/>
+<rect x="125" y="104" width="4" height="29" fill="#527582"/>
+<text x="141" y="123" font-family="Arial" font-size="11" font-weight="bold" fill="#F0F7FA">HOME</text>
+<rect x="125" y="138" width="187" height="29" rx="3" fill="#253844"/>
+<rect x="125" y="138" width="4" height="29" fill="#527582"/>
+<text x="141" y="157" font-family="Arial" font-size="11" font-weight="bold" fill="#F0F7FA">HELP</text>
+<rect x="125" y="172" width="187" height="29" rx="3" fill="#253844"/>
+<rect x="125" y="172" width="4" height="29" fill="#527582"/>
+<text x="141" y="191" font-family="Arial" font-size="11" font-weight="bold" fill="#F0F7FA">COLORS</text>
+<rect x="0" y="216" width="320" height="24" fill="#18242E"/>
+<text x="7" y="231" font-family="Arial" font-size="9" fill="#C6D7DD">K0 1X MODE 2X HOME HOLD MENU</text></svg>

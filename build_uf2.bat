@@ -22,6 +22,17 @@ if not exist "%QMK_BASH%" (
 
 echo.
 echo === ICST7789V QMK UF2 build ===
+echo Regenerating layer UI and keymap from design\layer_system.json...
+where py >nul 2>nul
+if not errorlevel 1 (
+    py -3 "%PROJECT_ROOT%\scripts\generate_layer_system.py"
+) else (
+    python "%PROJECT_ROOT%\scripts\generate_layer_system.py"
+)
+if errorlevel 1 (
+    echo ERROR: Layer metadata generation failed.
+    exit /b 4
+)
 echo QMK_HOME: %QMK_HOME%
 echo.
 

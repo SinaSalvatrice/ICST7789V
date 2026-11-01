@@ -5,6 +5,7 @@
 #include "gpio.h"
 #include "timer.h"
 #include "spi_master.h"
+#include "generated_layers.h"
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -12,14 +13,22 @@
 #    include "rgblight.h"
 #endif
 
+// QMK has eleven real layers. Every key passes through the same Tap Dance
+// interpreter, which selects actions from the generated shared design.
+#define CC_TD_LAYOUT LAYOUT(TD(0), TD(1), TD(2), TD(3), TD(4), TD(5), TD(6), TD(7), TD(8), TD(9), TD(10))
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [0] = LAYOUT(
-        KC_1, KC_2, KC_3, KC_4,
-        KC_5, KC_6, KC_7, KC_8,
-        KC_9, KC_0, KC_ENT
-    )
+    [0] = CC_TD_LAYOUT,
+    [1] = CC_TD_LAYOUT,
+    [2] = CC_TD_LAYOUT,
+    [3] = CC_TD_LAYOUT,
+    [4] = CC_TD_LAYOUT,
+    [5] = CC_TD_LAYOUT,
+    [6] = CC_TD_LAYOUT,
+    [7] = CC_TD_LAYOUT,
+    [8] = CC_TD_LAYOUT,
+    [9] = CC_TD_LAYOUT,
+    [10] = CC_TD_LAYOUT,
 };
-
 #define LCD_SCK   GP2
 #define LCD_MOSI  GP3
 #define LCD_RST   GP4
@@ -231,96 +240,5 @@ static void lcd_init(void) {
 #endif
 }
 
-static void lcd_render_reference(void) {
-    // Four distinctive colored quadrants. Red begins immediately after init.
-    lcd_fill(0, 0, 160, 120, C_RED);
-    lcd_fill(160, 0, 160, 120, C_GREEN);
-    lcd_fill(0, 120, 160, 120, C_BLUE);
-    lcd_fill(160, 120, 160, 120, C_BLACK);
-#if ICST_USE_HW_SPI
-    // Magenta stripe confirms the hardware-SPI firmware was flashed.
-    lcd_fill(0, 116, LCD_W, 8, C_MAGENTA);
-#endif
-
-    // Indicators for encoder press (yellow), K0 (cyan), and future matrix (magenta).
-    lcd_fill(130, 10, 20, 20, C_BLACK);
-    lcd_fill(290, 10, 20, 20, C_BLACK);
-    lcd_fill(130, 210, 20, 20, C_WHITE);
-}
-
-static void lcd_update_status(void) {
-    if (!panel_ready) return;
-    if (dirty_color) {
-        lcd_fill(160, 120, 160, 120, palette[selected_color]);
-        dirty_color = false;
-    }
-    if (dirty_buttons) {
-        lcd_fill(130, 10, 20, 20, push_indicator ? C_YELLOW : C_BLACK);
-        lcd_fill(290, 10, 20, 20, k0_indicator ? C_CYAN : C_BLACK);
-        dirty_buttons = false;
-    }
-    if (dirty_matrix) {
-        lcd_fill(130, 210, 20, 20, (current_key & 1u) ? C_MAGENTA : C_WHITE);
-        dirty_matrix = false;
-    }
-}
-
-static bool poll_button(pin_t pin, debounced_button_t *state) {
-    const bool sampled = gpio_read_pin(pin);
-    if (sampled != state->sample) {
-        state->sample = sampled;
-        state->changed = timer_read();
-    }
-    if (sampled != state->stable && timer_elapsed(state->changed) >= 25) {
-        state->stable = sampled;
-        if (!sampled) return true; // Press event.
-    }
-    return false;
-}
-
-void keyboard_post_init_user(void) {
-    gpio_set_pin_input_high(ENCODER_SW);
-    gpio_set_pin_input_high(K0_SW);
-    lcd_init();
-    lcd_render_reference();
-}
-
-void matrix_scan_user(void) {
-    if (poll_button(ENCODER_SW, &encoder_button)) {
-        push_indicator = !push_indicator;
-        selected_color = (selected_color + 1) % PALETTE_SIZE;
-        dirty_buttons = true;
-        dirty_color = true;
-#ifdef RGBLIGHT_ENABLE
-        rgblight_sethsv_noeeprom((uint8_t)(selected_color * 32), 255, 80);
-#endif
-    }
-    if (poll_button(K0_SW, &k0_button)) {
-        k0_indicator = !k0_indicator;
-        selected_color = 0;
-        dirty_buttons = true;
-        dirty_color = true;
-    }
-}
-
-bool encoder_update_user(uint8_t index, bool clockwise) {
-    if (index == 0) {
-        selected_color = (selected_color + (clockwise ? 1 : PALETTE_SIZE - 1)) % PALETTE_SIZE;
-        dirty_color = true;
-    }
-    return false;
-}
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (record->event.pressed && record->event.key.row < 3 && record->event.key.col < 4) {
-        ++current_key;
-        dirty_matrix = true;
-    }
-    return true;
-}
-
-void housekeeping_task_user(void) {
-    if (dirty_color || dirty_buttons || dirty_matrix) {
-        lcd_update_status();
-    }
-}
+// Layer UI implementation follows hardware SPI bootstrap (known good).
+#include "cc_runtime.h"

@@ -13,6 +13,9 @@
 // Conservative initial SPI clock divider (125 MHz / 32 ~ 3.9 MHz).
 #define ICST_SPI_DIVISOR 32
 
+// Tap Dance window: double taps must land within 200ms.
+#define TAPPING_TERM 200
+
 #define TFT_CS_PIN GP6
 #define TFT_DC_PIN GP5
 #define TFT_RST_PIN GP4

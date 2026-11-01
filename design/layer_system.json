@@ -1,0 +1,948 @@
+{
+  "schema_version": 1,
+  "status": "DESIGN_DRAFT_EDITABLE",
+  "native_resolution": [
+    240,
+    320
+  ],
+  "screen": [
+    320,
+    240
+  ],
+  "orientation": "landscape_controls_right",
+  "key_layout": [
+    4,
+    4,
+    3
+  ],
+  "wide_key": 11,
+  "display": {
+    "left_icon_px": 100,
+    "header_px": 28,
+    "footer_px": 25,
+    "animation": "quick-accent-notice"
+  },
+  "gestures": {
+    "tap_ms": 200,
+    "single": "active layer keymap",
+    "double": "global fixed layer direct navigation",
+    "hold": "per key alternate action",
+    "triple": "K11:previous layer",
+    "k0": {
+      "hardware_pin": "GP11",
+      "dedicated_module_only": true,
+      "single": "toggle_display_macro_encoder_mode",
+      "double": "open_home_display_mode",
+      "hold": "open_module_menu",
+      "tap_window_ms": 250,
+      "hold_ms": 620
+    },
+    "encoder_push": {
+      "display": "activate_preview_or_menu",
+      "macro": "active_layer_encoder_press_keycode"
+    }
+  },
+  "home_double_targets": [
+    "EDIT",
+    "NAV",
+    "MEDIA",
+    "WINDOW",
+    "FILES",
+    "BROWSER",
+    "TEXT",
+    "SYSTEM",
+    "CREATIVE",
+    "CUSTOM",
+    "HOME"
+  ],
+  "layers": [
+    {
+      "id": "HOME",
+      "name": "HOME",
+      "accent": "#5CD4CC",
+      "icon": [
+        ".......##.......",
+        "......####......",
+        ".....##..##.....",
+        "....##....##....",
+        "...##......##...",
+        "..############..",
+        "...##......##...",
+        "...##..##..##...",
+        "...##..##..##...",
+        "...##..##..##...",
+        "...##..##..##...",
+        "...##########..."
+      ],
+      "keys": [
+        {
+          "label": "F1",
+          "tap": "KC_F1",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F2",
+          "tap": "KC_F2",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F3",
+          "tap": "KC_F3",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F4",
+          "tap": "KC_F4",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F5",
+          "tap": "KC_F5",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F6",
+          "tap": "KC_F6",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F7",
+          "tap": "KC_F7",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F8",
+          "tap": "KC_F8",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F9",
+          "tap": "KC_F9",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F10",
+          "tap": "KC_F10",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ESC",
+          "tap": "KC_ESC",
+          "hold": "KC_NO"
+        }
+      ],
+      "encoder": {
+        "ccw": "KC_VOLD",
+        "cw": "KC_VOLU",
+        "press": "KC_MUTE"
+      }
+    },
+    {
+      "id": "EDIT",
+      "name": "EDIT",
+      "accent": "#DD9DFF",
+      "icon": [
+        "............##..",
+        "...........###..",
+        "..........###...",
+        ".........###....",
+        "........###.....",
+        ".......###......",
+        "......###.......",
+        ".....###........",
+        "....###.........",
+        "...###..........",
+        "..###...........",
+        "..############.."
+      ],
+      "keys": [
+        {
+          "label": "COPY",
+          "tap": "LCTL(KC_C)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "PAST",
+          "tap": "LCTL(KC_V)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "UNDO",
+          "tap": "LCTL(KC_Z)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "REDO",
+          "tap": "LCTL(KC_Y)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "CUT",
+          "tap": "LCTL(KC_X)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ALL",
+          "tap": "LCTL(KC_A)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "FIND",
+          "tap": "LCTL(KC_F)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "SAVE",
+          "tap": "LCTL(KC_S)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "BACK",
+          "tap": "LALT(KC_LEFT)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "NEXT",
+          "tap": "LALT(KC_RIGHT)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ESC",
+          "tap": "KC_ESC",
+          "hold": "KC_LCTL"
+        }
+      ],
+      "encoder": {
+        "ccw": "LCTL(KC_MINS)",
+        "cw": "LCTL(KC_EQL)",
+        "press": "LCTL(KC_0)"
+      }
+    },
+    {
+      "id": "NAV",
+      "name": "NAV",
+      "accent": "#75B5FF",
+      "icon": [
+        ".......##.......",
+        "......####......",
+        ".....######.....",
+        "....###..###....",
+        "...###....###...",
+        "..###......###..",
+        ".###...##...###.",
+        "..###..##..###..",
+        "...###.##.###...",
+        "....####.###....",
+        ".....######.....",
+        "......####......",
+        ".......##......."
+      ],
+      "keys": [
+        {
+          "label": "UP",
+          "tap": "KC_UP",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "DOWN",
+          "tap": "KC_DOWN",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "LEFT",
+          "tap": "KC_LEFT",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "RIGHT",
+          "tap": "KC_RIGHT",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "PGUP",
+          "tap": "KC_PGUP",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "PGDN",
+          "tap": "KC_PGDN",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "HOME",
+          "tap": "KC_HOME",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "END",
+          "tap": "KC_END",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "TAB",
+          "tap": "KC_TAB",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ENTER",
+          "tap": "KC_ENT",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ESC",
+          "tap": "KC_ESC",
+          "hold": "KC_NO"
+        }
+      ],
+      "encoder": {
+        "ccw": "KC_UP",
+        "cw": "KC_DOWN",
+        "press": "KC_ENT"
+      }
+    },
+    {
+      "id": "MEDIA",
+      "name": "MEDIA",
+      "accent": "#F3BD70",
+      "icon": [
+        "...##...........",
+        "...####.........",
+        "...######.......",
+        "...########.....",
+        "...##########...",
+        "...############.",
+        "...############.",
+        "...##########...",
+        "...########.....",
+        "...######.......",
+        "...####.........",
+        "...##..........."
+      ],
+      "keys": [
+        {
+          "label": "VOL+",
+          "tap": "KC_VOLU",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "VOL-",
+          "tap": "KC_VOLD",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "MUTE",
+          "tap": "KC_MUTE",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "PLAY",
+          "tap": "KC_MPLY",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "PREV",
+          "tap": "KC_MPRV",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "NEXT",
+          "tap": "KC_MNXT",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "STOP",
+          "tap": "KC_MSTP",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "FWD",
+          "tap": "KC_MFFD",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "BACK",
+          "tap": "KC_MRWD",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "PAUS",
+          "tap": "KC_MPLY",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ESC",
+          "tap": "KC_ESC",
+          "hold": "KC_NO"
+        }
+      ],
+      "encoder": {
+        "ccw": "KC_VOLD",
+        "cw": "KC_VOLU",
+        "press": "KC_MUTE"
+      }
+    },
+    {
+      "id": "WINDOW",
+      "name": "WINDOW",
+      "accent": "#78A9E8",
+      "icon": [
+        ".######.######..",
+        ".######.######..",
+        ".######.######..",
+        ".######.######..",
+        ".######.######..",
+        "................",
+        ".######.######..",
+        ".######.######..",
+        ".######.######..",
+        ".######.######..",
+        ".######.######.."
+      ],
+      "keys": [
+        {
+          "label": "DESK",
+          "tap": "LGUI(KC_D)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "EXP",
+          "tap": "LGUI(KC_E)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "SWIN",
+          "tap": "LALT(KC_TAB)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "CLOSE",
+          "tap": "LALT(KC_F4)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "LOCK",
+          "tap": "LGUI(KC_L)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "MAX",
+          "tap": "LGUI(KC_UP)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "LEFT",
+          "tap": "LGUI(KC_LEFT)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "RIGHT",
+          "tap": "LGUI(KC_RIGHT)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "TAB",
+          "tap": "LCTL(KC_TAB)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F11",
+          "tap": "KC_F11",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ESC",
+          "tap": "KC_ESC",
+          "hold": "KC_NO"
+        }
+      ],
+      "encoder": {
+        "ccw": "LALT(LSFT(KC_TAB))",
+        "cw": "LALT(KC_TAB)",
+        "press": "KC_ENT"
+      }
+    },
+    {
+      "id": "FILES",
+      "name": "FILES",
+      "accent": "#D9BE8B",
+      "icon": [
+        "................",
+        "..######........",
+        "..######........",
+        "..############..",
+        "..############..",
+        "..############..",
+        "..############..",
+        "..############..",
+        "..############..",
+        "..############..",
+        "..############..",
+        "................"
+      ],
+      "keys": [
+        {
+          "label": "EXP",
+          "tap": "LGUI(KC_E)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "COPY",
+          "tap": "LCTL(KC_C)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "PAST",
+          "tap": "LCTL(KC_V)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "CUT",
+          "tap": "LCTL(KC_X)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "DEL",
+          "tap": "KC_DEL",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "UNDO",
+          "tap": "LCTL(KC_Z)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "RENA",
+          "tap": "KC_F2",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "FIND",
+          "tap": "LCTL(KC_F)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "BACK",
+          "tap": "LALT(KC_LEFT)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "NEXT",
+          "tap": "LALT(KC_RIGHT)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ESC",
+          "tap": "KC_ESC",
+          "hold": "KC_NO"
+        }
+      ],
+      "encoder": {
+        "ccw": "KC_UP",
+        "cw": "KC_DOWN",
+        "press": "KC_ENT"
+      }
+    },
+    {
+      "id": "BROWSER",
+      "name": "BROWSER",
+      "accent": "#89D1C1",
+      "icon": [
+        ".....######.....",
+        "...##......##...",
+        "..#...####...#..",
+        ".#....#..#....#.",
+        ".#..########..#.",
+        ".#....#..#....#.",
+        ".#....#..#....#.",
+        ".#..########..#.",
+        ".#....#..#....#.",
+        "..#...####...#..",
+        "...##......##...",
+        ".....######....."
+      ],
+      "keys": [
+        {
+          "label": "BACK",
+          "tap": "LALT(KC_LEFT)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "NEXT",
+          "tap": "LALT(KC_RIGHT)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "RELD",
+          "tap": "LCTL(KC_R)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "NEWT",
+          "tap": "LCTL(KC_T)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "CLOT",
+          "tap": "LCTL(KC_W)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "FIND",
+          "tap": "LCTL(KC_F)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ADDR",
+          "tap": "LCTL(KC_L)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "SAVE",
+          "tap": "LCTL(KC_S)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "TAB+",
+          "tap": "LCTL(KC_TAB)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "TAB-",
+          "tap": "LCTL(LSFT(KC_TAB))",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ESC",
+          "tap": "KC_ESC",
+          "hold": "KC_NO"
+        }
+      ],
+      "encoder": {
+        "ccw": "LCTL(KC_PGUP)",
+        "cw": "LCTL(KC_PGDN)",
+        "press": "LCTL(KC_T)"
+      }
+    },
+    {
+      "id": "TEXT",
+      "name": "TEXT",
+      "accent": "#F6ACB6",
+      "icon": [
+        "..############..",
+        "..############..",
+        "......####......",
+        "......####......",
+        "......####......",
+        "......####......",
+        "......####......",
+        "......####......",
+        "......####......",
+        "......####......",
+        "....########....",
+        "....########...."
+      ],
+      "keys": [
+        {
+          "label": "COPY",
+          "tap": "LCTL(KC_C)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "PAST",
+          "tap": "LCTL(KC_V)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ALL",
+          "tap": "LCTL(KC_A)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "UNDO",
+          "tap": "LCTL(KC_Z)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "REDO",
+          "tap": "LCTL(KC_Y)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "BOLD",
+          "tap": "LCTL(KC_B)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ITAL",
+          "tap": "LCTL(KC_I)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "FIND",
+          "tap": "LCTL(KC_F)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "HOME",
+          "tap": "KC_HOME",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "END",
+          "tap": "KC_END",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ENTER",
+          "tap": "KC_ENT",
+          "hold": "KC_NO"
+        }
+      ],
+      "encoder": {
+        "ccw": "KC_LEFT",
+        "cw": "KC_RIGHT",
+        "press": "KC_ENT"
+      }
+    },
+    {
+      "id": "SYSTEM",
+      "name": "SYSTEM",
+      "accent": "#E8CA75",
+      "icon": [
+        "......####......",
+        "...###.##.###...",
+        "..##..####..##..",
+        "..##.##..##.##..",
+        "..####....####..",
+        ".####......####.",
+        ".####......####.",
+        "..####....####..",
+        "..##.##..##.##..",
+        "..##..####..##..",
+        "...###.##.###...",
+        "......####......"
+      ],
+      "keys": [
+        {
+          "label": "TASK",
+          "tap": "LCTL(LSFT(KC_ESC))",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "SHOT",
+          "tap": "LGUI(LSFT(KC_S))",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "LOCK",
+          "tap": "LGUI(KC_L)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "EXP",
+          "tap": "LGUI(KC_E)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "CMD",
+          "tap": "LGUI(KC_R)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ESC",
+          "tap": "KC_ESC",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ENT",
+          "tap": "KC_ENT",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "TAB",
+          "tap": "KC_TAB",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F11",
+          "tap": "KC_F11",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F12",
+          "tap": "KC_F12",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "HOME",
+          "tap": "KC_HOME",
+          "hold": "KC_NO"
+        }
+      ],
+      "encoder": {
+        "ccw": "KC_VOLD",
+        "cw": "KC_VOLU",
+        "press": "KC_MUTE"
+      }
+    },
+    {
+      "id": "CREATIVE",
+      "name": "CREATIVE",
+      "accent": "#DDA9ED",
+      "icon": [
+        ".......##.......",
+        ".......##.......",
+        "...##..##..##...",
+        "....########....",
+        ".....######.....",
+        "..############..",
+        ".....######.....",
+        "....########....",
+        "...##..##..##...",
+        ".......##.......",
+        ".......##......."
+      ],
+      "keys": [
+        {
+          "label": "UNDO",
+          "tap": "LCTL(KC_Z)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "REDO",
+          "tap": "LCTL(KC_Y)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "BRSH",
+          "tap": "KC_B",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ERAS",
+          "tap": "KC_E",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "MOVE",
+          "tap": "KC_V",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ZOOM",
+          "tap": "KC_Z",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "SAVE",
+          "tap": "LCTL(KC_S)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "GRID",
+          "tap": "LCTL(KC_QUOT)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "COPY",
+          "tap": "LCTL(KC_C)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "PAST",
+          "tap": "LCTL(KC_V)",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ESC",
+          "tap": "KC_ESC",
+          "hold": "KC_NO"
+        }
+      ],
+      "encoder": {
+        "ccw": "LCTL(KC_MINS)",
+        "cw": "LCTL(KC_EQL)",
+        "press": "LCTL(KC_0)"
+      }
+    },
+    {
+      "id": "CUSTOM",
+      "name": "CUSTOM",
+      "accent": "#A5AFD2",
+      "icon": [
+        "....##....##....",
+        "....##....##....",
+        "..############..",
+        "..############..",
+        "....##....##....",
+        "....##....##....",
+        "..############..",
+        "..############..",
+        "....##....##....",
+        "....##....##...."
+      ],
+      "keys": [
+        {
+          "label": "F13",
+          "tap": "KC_F13",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F14",
+          "tap": "KC_F14",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F15",
+          "tap": "KC_F15",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F16",
+          "tap": "KC_F16",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F17",
+          "tap": "KC_F17",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F18",
+          "tap": "KC_F18",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F19",
+          "tap": "KC_F19",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F20",
+          "tap": "KC_F20",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F21",
+          "tap": "KC_F21",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "F22",
+          "tap": "KC_F22",
+          "hold": "KC_NO"
+        },
+        {
+          "label": "ESC",
+          "tap": "KC_ESC",
+          "hold": "KC_NO"
+        }
+      ],
+      "encoder": {
+        "ccw": "KC_F23",
+        "cw": "KC_F24",
+        "press": "KC_ENT"
+      }
+    }
+  ]
+}
