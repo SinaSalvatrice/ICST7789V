@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 320 240">
+<rect width="320" height="240" fill="#10151C"/>
+<rect width="320" height="26" fill="#18242E"/>
+<text x="8" y="17" font-family="Arial" font-size="10" font-weight="bold" fill="#E8F3F5">CC / LAYERS</text>
+<rect x="252" y="5" width="60" height="17" rx="6" fill="#284149"/>
+<text x="282" y="17" font-family="Arial" text-anchor="middle" font-size="9" fill="#75E2D5">DISPLAY</text>
+<rect x="7" y="33" width="109" height="171" rx="8" fill="#1C2D38"/>
+<rect x="7" y="33" width="109" height="4" rx="2" fill="#5CD4CC"/>
+<rect x="57" y="63" width="4" height="4" fill="#5CD4CC"/>
+<rect x="61" y="63" width="4" height="4" fill="#5CD4CC"/>
+<rect x="53" y="67" width="4" height="4" fill="#5CD4CC"/>
+<rect x="57" y="67" width="4" height="4" fill="#5CD4CC"/>
+<rect x="61" y="67" width="4" height="4" fill="#5CD4CC"/>
+<rect x="65" y="67" width="4" height="4" fill="#5CD4CC"/>
+<rect x="49" y="71" width="4" height="4" fill="#5CD4CC"/>
+<rect x="53" y="71" width="4" height="4" fill="#5CD4CC"/>
+<rect x="65" y="71" width="4" height="4" fill="#5CD4CC"/>
+<rect x="69" y="71" width="4" height="4" fill="#5CD4CC"/>
+<rect x="45" y="75" width="4" height="4" fill="#5CD4CC"/>
+<rect x="49" y="75" width="4" height="4" fill="#5CD4CC"/>
+<rect x="69" y="75" width="4" height="4" fill="#5CD4CC"/>
+<rect x="73" y="75" width="4" height="4" fill="#5CD4CC"/>
+<rect x="41" y="79" width="4" height="4" fill="#5CD4CC"/>
+<rect x="45" y="79" width="4" height="4" fill="#5CD4CC"/>
+<rect x="73" y="79" width="4" height="4" fill="#5CD4CC"/>
+<rect x="77" y="79" width="4" height="4" fill="#5CD4CC"/>
+<rect x="37" y="83" width="4" height="4" fill="#5CD4CC"/>
+<rect x="41" y="83" width="4" height="4" fill="#5CD4CC"/>
+<rect x="45" y="83" width="4" height="4" fill="#5CD4CC"/>
+<rect x="49" y="83" width="4" height="4" fill="#5CD4CC"/>
+<rect x="53" y="83" width="4" height="4" fill="#5CD4CC"/>
+<rect x="57" y="83" width="4" height="4" fill="#5CD4CC"/>
+<rect x="61" y="83" width="4" height="4" fill="#5CD4CC"/>
+<rect x="65" y="83" width="4" height="4" fill="#5CD4CC"/>
+<rect x="69" y="83" width="4" height="4" fill="#5CD4CC"/>
+<rect x="73" y="83" width="4" height="4" fill="#5CD4CC"/>
+<rect x="77" y="83" width="4" height="4" fill="#5CD4CC"/>
+<rect x="81" y="83" width="4" height="4" fill="#5CD4CC"/>
+<rect x="41" y="87" width="4" height="4" fill="#5CD4CC"/>
+<rect x="45" y="87" width="4" height="4" fill="#5CD4CC"/>
+<rect x="73" y="87" width="4" height="4" fill="#5CD4CC"/>
+<rect x="77" y="87" width="4" height="4" fill="#5CD4CC"/>
+<rect x="41" y="91" width="4" height="4" fill="#5CD4CC"/>
+<rect x="45" y="91" width="4" height="4" fill="#5CD4CC"/>
+<rect x="57" y="91" width="4" height="4" fill="#5CD4CC"/>
+<rect x="61" y="91" width="4" height="4" fill="#5CD4CC"/>
+<rect x="73" y="91" width="4" height="4" fill="#5CD4CC"/>
+<rect x="77" y="91" width="4" height="4" fill="#5CD4CC"/>
+<rect x="41" y="95" width="4" height="4" fill="#5CD4CC"/>
+<rect x="45" y="95" width="4" height="4" fill="#5CD4CC"/>
+<rect x="57" y="95" width="4" height="4" fill="#5CD4CC"/>
+<rect x="61" y="95" width="4" height="4" fill="#5CD4CC"/>
+<rect x="73" y="95" width="4" height="4" fill="#5CD4CC"/>
+<rect x="77" y="95" width="4" height="4" fill="#5CD4CC"/>
+<rect x="41" y="99" width="4" height="4" fill="#5CD4CC"/>
+<rect x="45" y="99" width="4" height="4" fill="#5CD4CC"/>
+<rect x="57" y="99" width="4" height="4" fill="#5CD4CC"/>
+<rect x="61" y="99" width="4" height="4" fill="#5CD4CC"/>
+<rect x="73" y="99" width="4" height="4" fill="#5CD4CC"/>
+<rect x="77" y="99" width="4" height="4" fill="#5CD4CC"/>
+<rect x="41" y="103" width="4" height="4" fill="#5CD4CC"/>
+<rect x="45" y="103" width="4" height="4" fill="#5CD4CC"/>
+<rect x="57" y="103" width="4" height="4" fill="#5CD4CC"/>
+<rect x="61" y="103" width="4" height="4" fill="#5CD4CC"/>
+<rect x="73" y="103" width="4" height="4" fill="#5CD4CC"/>
+<rect x="77" y="103" width="4" height="4" fill="#5CD4CC"/>
+<rect x="41" y="107" width="4" height="4" fill="#5CD4CC"/>
+<rect x="45" y="107" width="4" height="4" fill="#5CD4CC"/>
+<rect x="49" y="107" width="4" height="4" fill="#5CD4CC"/>
+<rect x="53" y="107" width="4" height="4" fill="#5CD4CC"/>
+<rect x="57" y="107" width="4" height="4" fill="#5CD4CC"/>
+<rect x="61" y="107" width="4" height="4" fill="#5CD4CC"/>
+<rect x="65" y="107" width="4" height="4" fill="#5CD4CC"/>
+<rect x="69" y="107" width="4" height="4" fill="#5CD4CC"/>
+<rect x="73" y="107" width="4" height="4" fill="#5CD4CC"/>
+<rect x="77" y="107" width="4" height="4" fill="#5CD4CC"/>
+<text x="62" y="156" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="14" fill="#FFFFFF">HOME</text>
+<text x="62" y="173" text-anchor="middle" font-family="Arial" font-size="9" fill="#ACBAC4">2X = LAYER</text>
+<rect x="125" y="40" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
+<text x="130" y="51" font-family="Arial" font-size="8" fill="#8EADBC">K1</text>
+<text x="146.5" y="71" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">EDIT</text>
+<rect x="172" y="40" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
+<text x="177" y="51" font-family="Arial" font-size="8" fill="#8EADBC">K2</text>
+<text x="193.5" y="71" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">NAV</text>
+<rect x="219" y="40" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
+<text x="224" y="51" font-family="Arial" font-size="8" fill="#8EADBC">K3</text>
+<text x="240.5" y="71" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">MEDIA</text>
+<rect x="266" y="40" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
+<text x="271" y="51" font-family="Arial" font-size="8" fill="#8EADBC">K4</text>
+<text x="287.5" y="71" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">WINDO</text>
+<rect x="125" y="95" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
+<text x="130" y="106" font-family="Arial" font-size="8" fill="#8EADBC">K5</text>
+<text x="146.5" y="126" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">FILES</text>
+<rect x="172" y="95" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
+<text x="177" y="106" font-family="Arial" font-size="8" fill="#8EADBC">K6</text>
+<text x="193.5" y="126" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">BROWS</text>
+<rect x="219" y="95" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
+<text x="224" y="106" font-family="Arial" font-size="8" fill="#8EADBC">K7</text>
+<text x="240.5" y="126" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">TEXT</text>
+<rect x="266" y="95" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
+<text x="271" y="106" font-family="Arial" font-size="8" fill="#8EADBC">K8</text>
+<text x="287.5" y="126" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">SYSTE</text>
+<rect x="125" y="150" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
+<text x="130" y="161" font-family="Arial" font-size="8" fill="#8EADBC">K9</text>
+<text x="146.5" y="181" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">CREAT</text>
+<rect x="172" y="150" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
+<text x="177" y="161" font-family="Arial" font-size="8" fill="#8EADBC">K10</text>
+<text x="193.5" y="181" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">CUSTO</text>
+<rect x="219" y="150" width="90" height="47" rx="4" fill="#254653" stroke="#43737F"/>
+<text x="224" y="161" font-family="Arial" font-size="8" fill="#8EADBC">K11</text>
+<text x="264" y="181" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">HOME</text>
+<rect x="0" y="216" width="320" height="24" fill="#18242E"/>
+<text x="7" y="231" font-family="Arial" font-size="9" fill="#C6D7DD">K0  1x MODE   2x HOME   HOLD MENU</text>
+<text x="312" y="231" font-family="Arial" font-size="8" text-anchor="end" fill="#5CD4CC">TAP DANCE</text>
+</svg>
