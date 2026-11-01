@@ -1,5 +1,29 @@
 # ICST7789V — Waveshare RP2040-Zero / ST7789 hardware tester
 
+## Hardware-SPI test (current)
+
+The working firmware is saved as
+[`backup/qmk-st7789-gpio-working`](https://github.com/SinaSalvatrice/ICST7789V/tree/backup/qmk-st7789-gpio-working).
+This version keeps the exact same ST7789 init, four quadrants, encoder/PUSH/K0
+and matrix logic, but sends data using QMK's `spi_master.h` over SPI0 GP2/GP3.
+No change in wiring. Quantum Painter remains off.
+
+A **magenta stripe** through the middle distinguishes this firmware from the
+previous GPIO-only build. On a successful flash you should see the original
+red/green/blue/black quadrants with that stripe. If still white, the QMK SPI
+path is suspect. No GitHub Actions are used.
+
+Local build:
+```powershell
+git pull --ff-only origin main
+.\build_uf2.bat
+```
+
+For instant code-level rollback, in `keyboards/icst7789v/config.h` change
+`#define ICST_USE_HW_SPI 1` to `#define ICST_USE_HW_SPI 0` and rebuild.
+For a full unchanged rollback, use the saved backup branch.
+
+
 ## Current firmware: QMK direct-GPIO ST7789 isolation test
 
 **Why:** The prior Quantum Painter firmware produced a white screen despite the
