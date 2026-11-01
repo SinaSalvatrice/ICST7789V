@@ -189,7 +189,7 @@ static void lcd_init(void) {
     lcd_command_data(0x3Au, &pixel_format, 1);
     const uint8_t orientation = 0x60u; // MY=0 MX=1 MV=1, RGB
     lcd_command_data(0x36u, &orientation, 1);
-    lcd_command(0x21u); // INVON, standard ST7789 setup
+    lcd_command(0x20u); // INVOFF: panel showed complementary RGB colors with INVON
     lcd_command(0x13u); // NORON
     wait_ms(15);
     lcd_command(0x29u); // DISPON
