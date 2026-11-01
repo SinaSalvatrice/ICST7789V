@@ -208,7 +208,9 @@ static void draw_neopixel(void) {
 
 static void draw_page(void) {
     if (!display_ready) return;
-    qp_clear(display);
+    // ST7789 Quantum Painter's qp_clear() reinitializes the panel; it does NOT
+    // clear the visible framebuffer. Explicitly paint black instead.
+    paint_rect(0, 0, SCREEN_W - 1, SCREEN_H - 1, 0, 0, 0);
     switch (page) {
         case 0: draw_status(); break;
         case 1: draw_colors(); break;
@@ -253,11 +255,21 @@ void keyboard_post_init_user(void) {
     gpio_set_pin_input_high(ENCODER_PUSH_PIN);
     gpio_set_pin_input_high(TFT_K0_PIN);
 
-    display = qp_st7789_make_spi_device(TFT_WIDTH, TFT_HEIGHT, TFT_CS_PIN, TFT_DC_PIN, TFT_RST_PIN, 4, 0);
+    // Give the panel time to stabilize after USB power-up.
+    wait_ms(150);
+
+    // Lower SPI clock to ~3.9 MHz for reliable wiring during bring-up.
+    display = qp_st7789_make_spi_device(TFT_WIDTH, TFT_HEIGHT, TFT_CS_PIN, TFT_DC_PIN, TFT_RST_PIN, 32, 0);
     if (display && qp_init(display, QP_ROTATION_90)) {
-        display_ready = true;
-        qp_power(display, true);
-        draw_page();
+        if (qp_power(display, true)) {
+            display_ready = true;
+
+            // Visual SPI probe: a red screen for one second proves that QMK
+            // initialization and SPI pixel writes reach the ST7789.
+            paint_rect(0, 0, SCREEN_W - 1, SCREEN_H - 1, 0, 255, 255);
+            wait_ms(1000);
+            draw_page();
+        }
     }
 }
 
