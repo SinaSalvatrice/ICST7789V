@@ -1,6 +1,42 @@
 # ICST7789V — Waveshare RP2040-Zero / ST7789 hardware tester
 
-## Hardware-SPI test (current)
+## Hardware-SPI with reliable reset bootstrap (current)
+
+Previous builds could render the four colors after flashing, but showed a
+white display following a controller reset. This build now **initializes
+the ST7789 using the previously proven GPIO bit-bang transport on every boot**,
+draws a red 28×28 probe in the upper-left corner, and **only then switches**
+GP2/GP3 to QMK's hardware SPI0 for the fast four-quadrant redraw.
+
+Visual diagnosis after flashing and then restarting the controller:
+- **Four quadrants + magenta center stripe**: GPIO bootstrap and hardware SPI
+  both worked at least for this startup.
+- **Just a small red field, not the rest**: GPIO initialization worked,
+  but the handover to hardware SPI did not complete correctly.
+- **Completely white**: this GPIO initialization also did not produce pixels,
+  or firmware did not reach the display routine. Check the short backlight
+  blackout at startup before drawing conclusions.
+
+The firmware falls back to bit-banged GPIO automatically if QMK's
+`spi_start()` explicitly fails, but the ST7789 is a **write-only panel**:
+a successful `spi_start()` cannot prove that pixels actually appeared.
+A full visual restart check is therefore still essential.
+
+Use **only local builds** (never GitHub Actions):
+
+```powershell
+git pull --ff-only origin main
+.\build_uf2.bat
+```
+
+The working GPIO-only firmware is protected on
+[`backup/qmk-st7789-gpio-working`](https://github.com/SinaSalvatrice/ICST7789V/tree/backup/qmk-st7789-gpio-working),
+and the first experimental hardware-SPI firmware is preserved on
+[`backup/qmk-st7789-spi-before-reset-fix`](https://github.com/SinaSalvatrice/ICST7789V/tree/backup/qmk-st7789-spi-before-reset-fix).
+To disable hardware SPI without changing wiring, set
+`#define ICST_USE_HW_SPI 0` in `keyboards/icst7789v/config.h`.
+
+## Earlier hardware-SPI test (superseded)
 
 The working firmware is saved as
 [`backup/qmk-st7789-gpio-working`](https://github.com/SinaSalvatrice/ICST7789V/tree/backup/qmk-st7789-gpio-working).
