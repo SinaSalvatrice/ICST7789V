@@ -4,6 +4,7 @@
 #include QMK_KEYBOARD_H
 #include "gpio.h"
 #include "timer.h"
+#include "spi_master.h"
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -63,9 +64,28 @@ static const uint16_t palette[] = {
 };
 #define PALETTE_SIZE (sizeof(palette) / sizeof(palette[0]))
 
-// Direct software SPI, MSB first, CPOL=0, CPHA=0.
-// Each clock pulse drives a bit into the ST7789. No SPI peripheral is used.
-static inline void lcd_write_byte(uint8_t value) {
+// Selectable ST7789 transport; same commands and drawing for both modes.
+// Hardware: QMK SPI0 (GP2 SCK, GP3 MOSI) with software CS on GP6.
+// Fallback: set ICST_USE_HW_SPI=0 in config.h and rebuild.
+static bool lcd_bus_begin(void) {
+#if ICST_USE_HW_SPI
+    return spi_start(LCD_CS, false, 0, ICST_SPI_DIVISOR);
+#else
+    gpio_write_pin_low(LCD_CS);
+    return true;
+#endif
+}
+static void lcd_bus_end(void) {
+#if ICST_USE_HW_SPI
+    spi_stop();
+#else
+    gpio_write_pin_high(LCD_CS);
+#endif
+}
+static void lcd_write_byte(uint8_t value) {
+#if ICST_USE_HW_SPI
+    (void)spi_write(value);
+#else
     for (uint8_t bit = 0; bit < 8; ++bit) {
         gpio_write_pin_low(LCD_SCK);
         gpio_write_pin(LCD_MOSI, (value & 0x80u) != 0);
@@ -73,26 +93,30 @@ static inline void lcd_write_byte(uint8_t value) {
         value <<= 1;
     }
     gpio_write_pin_low(LCD_SCK);
+#endif
 }
-
-static void lcd_command(uint8_t command) {
-    gpio_write_pin_low(LCD_CS);
-    gpio_write_pin_low(LCD_DC);
-    lcd_write_byte(command);
-    gpio_write_pin_high(LCD_CS);
+static void lcd_write_bulk(const uint8_t *data, uint16_t size) {
+#if ICST_USE_HW_SPI
+    (void)spi_transmit(data, size);
+#else
+    for (uint16_t i = 0; i < size; ++i) lcd_write_byte(data[i]);
+#endif
 }
-
-static void lcd_command_data(uint8_t command, const uint8_t *data, uint8_t length) {
-    gpio_write_pin_low(LCD_CS);
+static void lcd_command(uint8_t cmd) {
+    if (!lcd_bus_begin()) return;
     gpio_write_pin_low(LCD_DC);
-    lcd_write_byte(command);
+    lcd_write_byte(cmd);
+    lcd_bus_end();
+}
+static void lcd_command_data(uint8_t cmd, const uint8_t *data, uint8_t length) {
+    if (!lcd_bus_begin()) return;
+    gpio_write_pin_low(LCD_DC);
+    lcd_write_byte(cmd);
     if (length) {
         gpio_write_pin_high(LCD_DC);
-        for (uint8_t i = 0; i < length; ++i) {
-            lcd_write_byte(data[i]);
-        }
+        lcd_write_bulk(data, length);
     }
-    gpio_write_pin_high(LCD_CS);
+    lcd_bus_end();
 }
 
 static void lcd_window(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
@@ -110,18 +134,23 @@ static void lcd_fill(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t rg
     if (h > LCD_H - y) h = LCD_H - y;
 
     lcd_window(x, y, x + w - 1, y + h - 1);
-    gpio_write_pin_low(LCD_CS);
+    if (!lcd_bus_begin()) return;
     gpio_write_pin_low(LCD_DC);
-    lcd_write_byte(0x2Cu);  // RAMWR
+    lcd_write_byte(0x2Cu); // RAMWR
     gpio_write_pin_high(LCD_DC);
-    const uint8_t hi = rgb565 >> 8;
-    const uint8_t lo = rgb565 & 0xFFu;
-    const uint32_t pixels = (uint32_t)w * (uint32_t)h;
-    for (uint32_t n = 0; n < pixels; ++n) {
-        lcd_write_byte(hi);
-        lcd_write_byte(lo);
+
+    uint8_t row_pixels[128]; // 64 RGB565 pixels, no large framebuffer needed.
+    for (uint8_t i = 0; i < sizeof(row_pixels); i += 2) {
+        row_pixels[i] = (uint8_t)(rgb565 >> 8);
+        row_pixels[i + 1] = (uint8_t)rgb565;
     }
-    gpio_write_pin_high(LCD_CS);
+    uint32_t remaining = (uint32_t)w * (uint32_t)h;
+    while (remaining > 0) {
+        uint16_t count = remaining >= 64 ? 64 : (uint16_t)remaining;
+        lcd_write_bulk(row_pixels, count * 2);
+        remaining -= count;
+    }
+    lcd_bus_end();
 }
 
 // Hardware reset and standard ST7789 16-bit initialization.
@@ -133,12 +162,17 @@ static void lcd_init(void) {
     gpio_set_pin_output(LCD_CS);
     gpio_set_pin_output(LCD_DC);
     gpio_set_pin_output(LCD_RST);
-    gpio_set_pin_output(LCD_SCK);
-    gpio_set_pin_output(LCD_MOSI);
     gpio_write_pin_high(LCD_CS);
     gpio_write_pin_high(LCD_DC);
+#if ICST_USE_HW_SPI
+    // Let QMK SPI master take ownership of GP2/GP3 alternate functions.
+    spi_init();
+#else
+    gpio_set_pin_output(LCD_SCK);
+    gpio_set_pin_output(LCD_MOSI);
     gpio_write_pin_low(LCD_SCK);
     gpio_write_pin_low(LCD_MOSI);
+#endif
 
     gpio_write_pin_high(LCD_RST);
     wait_ms(20);
@@ -170,6 +204,10 @@ static void lcd_render_reference(void) {
     lcd_fill(160, 0, 160, 120, C_GREEN);
     lcd_fill(0, 120, 160, 120, C_BLUE);
     lcd_fill(160, 120, 160, 120, C_BLACK);
+#if ICST_USE_HW_SPI
+    // Magenta stripe confirms the hardware-SPI firmware was flashed.
+    lcd_fill(0, 116, LCD_W, 8, C_MAGENTA);
+#endif
 
     // Indicators for encoder press (yellow), K0 (cyan), and future matrix (magenta).
     lcd_fill(130, 10, 20, 20, C_BLACK);
