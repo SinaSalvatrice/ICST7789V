@@ -128,7 +128,8 @@ static void lcd_fill(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t rg
 // MADCTL=0x60 corresponds to landscape orientation (320x240).
 static void lcd_init(void) {
     gpio_set_pin_output(LCD_BL);
-    gpio_write_pin_low(LCD_BL); // Keep backlight off while initializing.
+    gpio_write_pin_low(LCD_BL); // QMK heartbeat: visible 1-second backlight OFF phase.
+    wait_ms(1000);
     gpio_set_pin_output(LCD_CS);
     gpio_set_pin_output(LCD_DC);
     gpio_set_pin_output(LCD_RST);
