@@ -64,28 +64,52 @@ static const uint16_t palette[] = {
 };
 #define PALETTE_SIZE (sizeof(palette) / sizeof(palette[0]))
 
-// Selectable ST7789 transport; same commands and drawing for both modes.
-// Hardware: QMK SPI0 (GP2 SCK, GP3 MOSI) with software CS on GP6.
-// Fallback: set ICST_USE_HW_SPI=0 in config.h and rebuild.
+// Always bootstrap ST7789 over proven GPIO bit-banging after any MCU reset.
+// Only switch GP2/GP3 into hardware SPI after panel reset, initialization,
+// and a visible software-SPI diagnostic square are complete.
+#if ICST_USE_HW_SPI
+static bool lcd_hw_active = false;
+#endif
+
+static void lcd_gpio_bus_init(void) {
+    gpio_set_pin_output(LCD_SCK);
+    gpio_set_pin_output(LCD_MOSI);
+    gpio_write_pin_low(LCD_SCK);
+    gpio_write_pin_low(LCD_MOSI);
+}
+
 static bool lcd_bus_begin(void) {
 #if ICST_USE_HW_SPI
-    return spi_start(LCD_CS, false, 0, ICST_SPI_DIVISOR);
-#else
+    if (lcd_hw_active) {
+        if (spi_start(LCD_CS, false, 0, ICST_SPI_DIVISOR)) {
+            return true;
+        }
+        // If QMK refuses to start a transfer, return to software GPIO.
+        lcd_hw_active = false;
+        lcd_gpio_bus_init();
+    }
+#endif
     gpio_write_pin_low(LCD_CS);
     return true;
-#endif
 }
+
 static void lcd_bus_end(void) {
 #if ICST_USE_HW_SPI
-    spi_stop();
-#else
-    gpio_write_pin_high(LCD_CS);
+    if (lcd_hw_active) {
+        spi_stop();
+        return;
+    }
 #endif
+    gpio_write_pin_high(LCD_CS);
 }
+
 static void lcd_write_byte(uint8_t value) {
 #if ICST_USE_HW_SPI
-    (void)spi_write(value);
-#else
+    if (lcd_hw_active) {
+        (void)spi_write(value);
+        return;
+    }
+#endif
     for (uint8_t bit = 0; bit < 8; ++bit) {
         gpio_write_pin_low(LCD_SCK);
         gpio_write_pin(LCD_MOSI, (value & 0x80u) != 0);
@@ -93,14 +117,18 @@ static void lcd_write_byte(uint8_t value) {
         value <<= 1;
     }
     gpio_write_pin_low(LCD_SCK);
-#endif
 }
+
 static void lcd_write_bulk(const uint8_t *data, uint16_t size) {
 #if ICST_USE_HW_SPI
-    (void)spi_transmit(data, size);
-#else
-    for (uint16_t i = 0; i < size; ++i) lcd_write_byte(data[i]);
+    if (lcd_hw_active) {
+        (void)spi_transmit(data, size);
+        return;
+    }
 #endif
+    for (uint16_t i = 0; i < size; ++i) {
+        lcd_write_byte(data[i]);
+    }
 }
 static void lcd_command(uint8_t cmd) {
     if (!lcd_bus_begin()) return;
@@ -164,15 +192,7 @@ static void lcd_init(void) {
     gpio_set_pin_output(LCD_RST);
     gpio_write_pin_high(LCD_CS);
     gpio_write_pin_high(LCD_DC);
-#if ICST_USE_HW_SPI
-    // Let QMK SPI master take ownership of GP2/GP3 alternate functions.
-    spi_init();
-#else
-    gpio_set_pin_output(LCD_SCK);
-    gpio_set_pin_output(LCD_MOSI);
-    gpio_write_pin_low(LCD_SCK);
-    gpio_write_pin_low(LCD_MOSI);
-#endif
+    lcd_gpio_bus_init(); // GPIO transport first, on cold AND warm MCU boot.
 
     gpio_write_pin_high(LCD_RST);
     wait_ms(20);
@@ -196,6 +216,19 @@ static void lcd_init(void) {
     wait_ms(100);
     panel_ready = true;
     gpio_write_pin_high(LCD_BL);
+
+#if ICST_USE_HW_SPI
+    // This 28x28 red probe is painted BEFORE hardware SPI takes control.
+    // If it appears but the four quadrants do not, the QMK SPI transfer
+    // path failed even though the panel was initialized correctly.
+    lcd_fill(0, 0, 28, 28, C_RED);
+
+    // Hand over the already-initialized ST7789 to the RP2040's SPI0.
+    // Keep the panel reset pin untouched during this transition.
+    gpio_write_pin_high(LCD_CS);
+    spi_init();
+    lcd_hw_active = true;
+#endif
 }
 
 static void lcd_render_reference(void) {
