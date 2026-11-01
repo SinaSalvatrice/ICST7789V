@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 320 240">
+<rect width="320" height="240" fill="#10151C"/><rect width="320" height="27" fill="#18242E"/>
+<text x="7" y="18" font-family="Arial" font-size="10" font-weight="bold" fill="#F0F7FA">CC / LAYERS</text>
+<rect x="265" y="5" width="44" height="17" rx="6" fill="#284149"/>
+<text x="287" y="17" text-anchor="middle" font-family="Arial" font-size="9" fill="#75E2D5">DISP</text>
+<text x="12" y="59" font-family="Arial" font-size="19" font-weight="bold" fill="#59DAD1">MODULE HELP</text>
+<text x="12" y="84" font-family="Arial" font-size="11" fill="#F0F7FA">K0 1X  DISP/ENC</text>
+<text x="12" y="102" font-family="Arial" font-size="11" fill="#F0F7FA">K0 2X  HOME</text>
+<text x="12" y="120" font-family="Arial" font-size="11" fill="#F0F7FA">K0 HOLD  MENU</text>
+<text x="12" y="138" font-family="Arial" font-size="11" fill="#F0F7FA">KEY 1X  MACRO</text>
+<text x="12" y="156" font-family="Arial" font-size="11" fill="#F0F7FA">KEY 2X  LAYER</text>
+<text x="12" y="174" font-family="Arial" font-size="11" fill="#F0F7FA">KEY HOLD  ALT</text>
+<text x="12" y="192" font-family="Arial" font-size="11" fill="#EFD078">K11 3X  PREV</text>
+<rect x="0" y="216" width="320" height="24" fill="#18242E"/>
+<text x="7" y="231" font-family="Arial" font-size="9" fill="#C6D7DD">K0 1X MODE 2X HOME HOLD MENU</text></svg>
