@@ -1,5 +1,45 @@
 # ICST7789V — Waveshare RP2040-Zero / ST7789 hardware tester
 
+## Current firmware: QMK direct-GPIO ST7789 isolation test
+
+**Why:** The prior Quantum Painter firmware produced a white screen despite the
+same hardware working with an Arduino sketch. The current default QMK keymap
+therefore sends ST7789 commands and RGB565 pixels on GP2 (SCK) and GP3 (MOSI)
+using direct GPIO output, avoiding QMK hardware SPI and Quantum Painter entirely.
+
+**Wiring remains unchanged:** GND/3V3, SCK GP2, MOSI GP3, RST GP4,
+DC GP5, CS GP6, BL GP7, encoder A GP8/B GP9/PUSH GP10, K0 GP11.
+
+**Expected after flashing:** four colored quadrants:
+red top left, green top right, blue bottom left, black bottom right.
+This deliberate simple firmware is not the final Layer Map UI.
+
+- Turn encoder: lower-right quadrant cycles through colors.
+- Press encoder: same quadrant advances, and top-left yellow indicator toggles.
+- Press K0: lower-right quadrant resets to black; top-right cyan indicator toggles.
+- Later attach 11-key 3×4 matrix: bottom-left square changes between white
+  and magenta on each matrix key press.
+- Optional external NeoPixels on GP29: set `RGBLIGHT_ENABLE = yes` in
+  `rules.mk` after wiring an LED and power; QMK RGB lighting stays independent.
+
+This diagnostic operates deliberately slower than hardware SPI and redraws
+only small areas after boot. Matrix and NeoPixel allocations remain reserved.
+
+Build locally (NO GitHub Actions):
+```powershell
+git pull --ff-only origin main
+.\build_uf2.bat
+```
+
+If the screen still stays all white, confirm that **this new UF2** was flashed.
+A white screen would mean that even basic GPIO toggling is not reaching the
+controller, or that QMK initialization is not running; do not guess which
+without further evidence.
+
+The earlier Quantum Painter implementation is preserved in git history and
+can be reinstated once the GPIO isolation test has succeeded.
+
+
 The **QMK module diagnostic** in `keyboards/icst7789v/` targets the **new 320×240 landscape ST7789 with EC11 encoder + PUSH + K0**. It is intentionally separate from the older **135×240 8-pin Arduino test** in `arduino/`, which remains untouched as a reference.
 
 ## Hardware already connected
