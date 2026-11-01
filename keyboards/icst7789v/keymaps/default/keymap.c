@@ -52,26 +52,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define C_MAGENTA 0xF81Fu
 
 static bool panel_ready = false;
-static uint8_t selected_color = 0;
-static uint8_t current_key = 0;
-static bool dirty_color = false;
-static bool dirty_buttons = false;
-static bool dirty_matrix = false;
-static bool push_indicator = false;
-static bool k0_indicator = false;
-
-typedef struct {
-    bool sample;
-    bool stable;
-    uint16_t changed;
-} debounced_button_t;
-static debounced_button_t encoder_button = {true, true, 0};
-static debounced_button_t k0_button = {true, true, 0};
-
-static const uint16_t palette[] = {
-    C_BLACK, C_WHITE, C_YELLOW, C_CYAN, C_MAGENTA, C_RED, C_GREEN, C_BLUE
-};
-#define PALETTE_SIZE (sizeof(palette) / sizeof(palette[0]))
 
 // Always bootstrap ST7789 over proven GPIO bit-banging after any MCU reset.
 // Only switch GP2/GP3 into hardware SPI after panel reset, initialization,
