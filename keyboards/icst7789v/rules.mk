@@ -1,10 +1,11 @@
-# Waveshare RP2040-Zero; no extra Pico header pads required.
+# Waveshare RP2040-Zero ST7789 GPIO diagnostic.
 BOARD = GENERIC_RP_RP2040
 
-QUANTUM_PAINTER_ENABLE = yes
-QUANTUM_PAINTER_DRIVERS += st7789_spi
+# Temporarily bypass the QMK Quantum Painter / hardware SPI drivers.
+# Their source stays in git history for restoration after this isolation test.
+QUANTUM_PAINTER_ENABLE = no
 
-# Hardware module test: external LED chain is NOT required.
-# Switch to yes after wiring a WS2812/SK6812 DIN to GP29.
+# Matrix and EC11 QMK modules remain enabled in keyboard.json.
+# Optional external WS2812/SK6812 on GP29:
 RGBLIGHT_ENABLE = no
 WS2812_DRIVER = vendor
