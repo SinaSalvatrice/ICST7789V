@@ -8,6 +8,11 @@
 #define SPI_MOSI_PIN GP3
 #define SPI_MISO_PIN NO_PIN
 
+// 1 = hardware SPI0, 0 = proven software-GPIO implementation.
+#define ICST_USE_HW_SPI 1
+// Conservative initial SPI clock divider (125 MHz / 32 ~ 3.9 MHz).
+#define ICST_SPI_DIVISOR 32
+
 #define TFT_CS_PIN GP6
 #define TFT_DC_PIN GP5
 #define TFT_RST_PIN GP4
