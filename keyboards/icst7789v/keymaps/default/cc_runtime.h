@@ -145,23 +145,32 @@ static void cc_layer_screen(void) {
     cc_draw_text(12, 192, home ? "HOME MAP" :
                  (selected == cc_active ? "ACTIVE" : "PREVIEW"), 1, C_WHITE);
     for (uint8_t i = 0; i < CC_KEY_COUNT; ++i) {
-        const uint16_t x = 125 + (i % 4u) * 47u;
-        const uint16_t y = 40 + (i / 4u) * 55u;
-        const uint16_t w = i == 10 ? 90 : 43;
+        // Coordinates come from the physical-key geometry in layer_system.json.
+        // K5 is double-height; K9 is double-width; K10 is bottom-right.
+        const cc_key_shape_t *shape = &cc_key_shapes[i];
+        const uint16_t x = shape->x;
+        const uint16_t y = shape->y;
+        const uint16_t w = shape->w;
+        const uint16_t h = shape->h;
         const char *label = home ? cc_layers[cc_double_target[i]].name :
                                   desc->labels[i];
         const bool highlight = home ? cc_double_target[i] == cc_preview :
                                      cc_last_key == i;
-        lcd_fill(x, y, w, 47, highlight ? 0x3A90 : 0x29E8);
+        lcd_fill(x, y, w, h, highlight ? 0x3A90 : 0x29E8);
         lcd_fill(x, y, w, 2, highlight ? accent : 0x426A);
         cc_draw_text(x + 4, y + 5, "K", 1, 0xAD75);
         if (i < 9) {
-            char index_str[2] = {(char)('1' + i), 0};
-            cc_draw_text(x + 10, y + 5, index_str, 1, 0xAD75);
+            char number[2] = {(char)('1' + i), 0};
+            cc_draw_text(x + 10, y + 5, number, 1, 0xAD75);
         } else {
-            cc_draw_text(x + 10, y + 5, i == 9 ? "10" : "11", 1, 0xAD75);
+            cc_draw_text(x + 10, y + 5, "10", 1, 0xAD75);
         }
-        cc_draw_text(x + 5, y + 25, label, 1, C_WHITE);
+        // Shorten long layer names inside 43-pixel single-key tiles.
+        char short_label[6] = {0};
+        for (uint8_t j = 0; j < 5 && label[j]; ++j) {
+            short_label[j] = label[j];
+        }
+        cc_draw_text(x + 5, y + (h / 2u), short_label, 1, C_WHITE);
     }
 }
 
@@ -189,7 +198,7 @@ static void cc_help_screen(void) {
     cc_draw_text(12, 132, "KEY 1X  MACRO", 1, C_WHITE);
     cc_draw_text(12, 150, "KEY 2X  LAYER", 1, C_WHITE);
     cc_draw_text(12, 168, "KEY HOLD  ALT", 1, C_WHITE);
-    cc_draw_text(12, 186, "K11 3X  PREV", 1, C_YELLOW);
+    cc_draw_text(12, 186, "K10 3X  PREV", 1, C_YELLOW);
 }
 
 static void cc_color_screen(void) {

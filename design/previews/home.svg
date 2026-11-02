@@ -78,34 +78,34 @@
 <text x="62" y="173" text-anchor="middle" font-family="Arial" font-size="9" fill="#ACBAC4">2X = LAYER</text>
 <rect x="125" y="40" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
 <text x="130" y="51" font-family="Arial" font-size="8" fill="#8EADBC">K1</text>
-<text x="146.5" y="71" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">EDIT</text>
+<text x="146" y="71" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">EDIT</text>
 <rect x="172" y="40" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
 <text x="177" y="51" font-family="Arial" font-size="8" fill="#8EADBC">K2</text>
-<text x="193.5" y="71" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">NAV</text>
+<text x="193" y="71" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">NAV</text>
 <rect x="219" y="40" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
 <text x="224" y="51" font-family="Arial" font-size="8" fill="#8EADBC">K3</text>
-<text x="240.5" y="71" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">MEDIA</text>
+<text x="240" y="71" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">MEDIA</text>
 <rect x="266" y="40" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
 <text x="271" y="51" font-family="Arial" font-size="8" fill="#8EADBC">K4</text>
-<text x="287.5" y="71" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">WINDO</text>
+<text x="287" y="71" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">WINDO</text>
 <rect x="125" y="95" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
 <text x="130" y="106" font-family="Arial" font-size="8" fill="#8EADBC">K5</text>
-<text x="146.5" y="126" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">FILES</text>
+<text x="146" y="126" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">FILES</text>
 <rect x="172" y="95" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
 <text x="177" y="106" font-family="Arial" font-size="8" fill="#8EADBC">K6</text>
-<text x="193.5" y="126" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">BROWS</text>
+<text x="193" y="126" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">BROWS</text>
 <rect x="219" y="95" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
 <text x="224" y="106" font-family="Arial" font-size="8" fill="#8EADBC">K7</text>
-<text x="240.5" y="126" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">TEXT</text>
+<text x="240" y="126" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">TEXT</text>
 <rect x="266" y="95" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
 <text x="271" y="106" font-family="Arial" font-size="8" fill="#8EADBC">K8</text>
-<text x="287.5" y="126" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">SYSTE</text>
+<text x="287" y="126" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">SYSTE</text>
 <rect x="125" y="150" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
 <text x="130" y="161" font-family="Arial" font-size="8" fill="#8EADBC">K9</text>
-<text x="146.5" y="181" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">CREAT</text>
+<text x="146" y="181" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">CREAT</text>
 <rect x="172" y="150" width="43" height="47" rx="4" fill="#263744" stroke="#40505E"/>
 <text x="177" y="161" font-family="Arial" font-size="8" fill="#8EADBC">K10</text>
-<text x="193.5" y="181" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">CUSTO</text>
+<text x="193" y="181" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">CUSTO</text>
 <rect x="219" y="150" width="90" height="47" rx="4" fill="#254653" stroke="#43737F"/>
 <text x="224" y="161" font-family="Arial" font-size="8" fill="#8EADBC">K11</text>
 <text x="264" y="181" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="10" fill="#F4F8FB">HOME</text>

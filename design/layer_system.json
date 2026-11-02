@@ -13,9 +13,9 @@
   "key_layout": [
     4,
     4,
-    3
+    2
   ],
-  "wide_key": 11,
+  "wide_key": 9,
   "display": {
     "left_icon_px": 100,
     "header_px": 28,
@@ -27,7 +27,7 @@
     "single": "active layer keymap",
     "double": "global fixed layer direct navigation",
     "hold": "per key alternate action",
-    "triple": "K11:previous layer",
+    "triple": "K10:previous layer",
     "k0": {
       "hardware_pin": "GP11",
       "dedicated_module_only": true,
@@ -52,8 +52,7 @@
     "TEXT",
     "SYSTEM",
     "CREATIVE",
-    "CUSTOM",
-    "HOME"
+    "CUSTOM"
   ],
   "layers": [
     {
@@ -123,11 +122,6 @@
         {
           "label": "F10",
           "tap": "KC_F10",
-          "hold": "KC_NO"
-        },
-        {
-          "label": "ESC",
-          "tap": "KC_ESC",
           "hold": "KC_NO"
         }
       ],
@@ -205,11 +199,6 @@
           "label": "NEXT",
           "tap": "LALT(KC_RIGHT)",
           "hold": "KC_NO"
-        },
-        {
-          "label": "ESC",
-          "tap": "KC_ESC",
-          "hold": "KC_LCTL"
         }
       ],
       "encoder": {
@@ -287,11 +276,6 @@
           "label": "ENTER",
           "tap": "KC_ENT",
           "hold": "KC_NO"
-        },
-        {
-          "label": "ESC",
-          "tap": "KC_ESC",
-          "hold": "KC_NO"
         }
       ],
       "encoder": {
@@ -368,11 +352,6 @@
           "label": "PAUS",
           "tap": "KC_MPLY",
           "hold": "KC_NO"
-        },
-        {
-          "label": "ESC",
-          "tap": "KC_ESC",
-          "hold": "KC_NO"
         }
       ],
       "encoder": {
@@ -447,11 +426,6 @@
         {
           "label": "F11",
           "tap": "KC_F11",
-          "hold": "KC_NO"
-        },
-        {
-          "label": "ESC",
-          "tap": "KC_ESC",
           "hold": "KC_NO"
         }
       ],
@@ -529,11 +503,6 @@
           "label": "NEXT",
           "tap": "LALT(KC_RIGHT)",
           "hold": "KC_NO"
-        },
-        {
-          "label": "ESC",
-          "tap": "KC_ESC",
-          "hold": "KC_NO"
         }
       ],
       "encoder": {
@@ -609,11 +578,6 @@
         {
           "label": "TAB-",
           "tap": "LCTL(LSFT(KC_TAB))",
-          "hold": "KC_NO"
-        },
-        {
-          "label": "ESC",
-          "tap": "KC_ESC",
           "hold": "KC_NO"
         }
       ],
@@ -691,11 +655,6 @@
           "label": "END",
           "tap": "KC_END",
           "hold": "KC_NO"
-        },
-        {
-          "label": "ENTER",
-          "tap": "KC_ENT",
-          "hold": "KC_NO"
         }
       ],
       "encoder": {
@@ -772,11 +731,6 @@
           "label": "F12",
           "tap": "KC_F12",
           "hold": "KC_NO"
-        },
-        {
-          "label": "HOME",
-          "tap": "KC_HOME",
-          "hold": "KC_NO"
         }
       ],
       "encoder": {
@@ -852,11 +806,6 @@
           "label": "PAST",
           "tap": "LCTL(KC_V)",
           "hold": "KC_NO"
-        },
-        {
-          "label": "ESC",
-          "tap": "KC_ESC",
-          "hold": "KC_NO"
         }
       ],
       "encoder": {
@@ -931,11 +880,6 @@
           "label": "F22",
           "tap": "KC_F22",
           "hold": "KC_NO"
-        },
-        {
-          "label": "ESC",
-          "tap": "KC_ESC",
-          "hold": "KC_NO"
         }
       ],
       "encoder": {
@@ -943,6 +887,100 @@
         "cw": "KC_F24",
         "press": "KC_ENT"
       }
+    }
+  ],
+  "key_count": 10,
+  "tall_key": 5,
+  "physical_keys": [
+    {
+      "id": "K1",
+      "row": 0,
+      "col": 0,
+      "x": 0,
+      "y": 0,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "K2",
+      "row": 0,
+      "col": 1,
+      "x": 1,
+      "y": 0,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "K3",
+      "row": 0,
+      "col": 2,
+      "x": 2,
+      "y": 0,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "K4",
+      "row": 0,
+      "col": 3,
+      "x": 3,
+      "y": 0,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "K5",
+      "row": 1,
+      "col": 0,
+      "x": 0,
+      "y": 1,
+      "w": 1,
+      "h": 2
+    },
+    {
+      "id": "K6",
+      "row": 1,
+      "col": 1,
+      "x": 1,
+      "y": 1,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "K7",
+      "row": 1,
+      "col": 2,
+      "x": 2,
+      "y": 1,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "K8",
+      "row": 1,
+      "col": 3,
+      "x": 3,
+      "y": 1,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "K9",
+      "row": 2,
+      "col": 1,
+      "x": 1,
+      "y": 2,
+      "w": 2,
+      "h": 1
+    },
+    {
+      "id": "K10",
+      "row": 2,
+      "col": 3,
+      "x": 3,
+      "y": 2,
+      "w": 1,
+      "h": 1
     }
   ]
 }
