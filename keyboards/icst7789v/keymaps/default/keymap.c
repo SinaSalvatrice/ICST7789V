@@ -13,9 +13,9 @@
 #    include "rgblight.h"
 #endif
 
-// QMK has eleven real layers. Every key passes through the same Tap Dance
+// QMK has eleven real layers and ten physical macro keys. All keys use Tap Dance
 // interpreter, which selects actions from the generated shared design.
-#define CC_TD_LAYOUT LAYOUT(TD(0), TD(1), TD(2), TD(3), TD(4), TD(5), TD(6), TD(7), TD(8), TD(9), TD(10))
+#define CC_TD_LAYOUT LAYOUT(TD(0), TD(1), TD(2), TD(3), TD(4), TD(5), TD(6), TD(7), TD(8), TD(9))
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = CC_TD_LAYOUT,
     [1] = CC_TD_LAYOUT,
