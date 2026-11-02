@@ -34,12 +34,12 @@ static void cc_encoder_press_action(void) {
     }
 }
 
-// All 11 macro keys participate in Tap Dance; K0 is not a matrix key.
+// All 10 macro keys participate in Tap Dance; K0 is not a matrix key.
 static void cc_tap_finished(tap_dance_state_t *state, void *data) {
     (void)data;
     const uint8_t index = state->index;
     if (index >= CC_KEY_COUNT) return;
-    if (state->count >= 3 && index == 10) {
+    if (state->count >= 3 && index == 9) {
         cc_activate_layer(cc_previous);
         return;
     }
@@ -80,7 +80,6 @@ tap_dance_action_t tap_dance_actions[] = {
     [7]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, cc_tap_finished, cc_tap_reset),
     [8]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, cc_tap_finished, cc_tap_reset),
     [9]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, cc_tap_finished, cc_tap_reset),
-    [10] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, cc_tap_finished, cc_tap_reset),
 };
 
 void keyboard_post_init_user(void) {
@@ -138,7 +137,7 @@ static void cc_encoder_button_update(void) {
 }
 
 void matrix_scan_user(void) {
-    // Both contacts GP10/GP11 are independent of the 11-key matrix.
+    // Both contacts GP10/GP11 are independent of the 10-key matrix.
     cc_k0_update();
     cc_encoder_button_update();
 }
