@@ -9,5 +9,5 @@ TAP_DANCE_ENABLE = yes
 
 # Matrix and EC11 QMK modules remain enabled in keyboard.json.
 # Optional external WS2812/SK6812 on GP29:
-RGBLIGHT_ENABLE = no
+RGBLIGHT_ENABLE = yes
 WS2812_DRIVER = vendor
