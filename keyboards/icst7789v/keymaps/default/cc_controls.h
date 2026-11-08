@@ -85,6 +85,13 @@ tap_dance_action_t tap_dance_actions[] = {
 void keyboard_post_init_user(void) {
     gpio_set_pin_input_high(ENCODER_SW);
     gpio_set_pin_input_high(K0_SW);
+#ifdef RGBLIGHT_ENABLE
+    // Standalone 10-NeoPixel bring-up: visible rainbow chase on GP29.
+    // The mode and brightness are RAM-only, never written to EEPROM.
+    rgblight_enable_noeeprom();
+    rgblight_mode_noeeprom(RGBLIGHT_MODE_RAINBOW_SWIRL);
+    rgblight_sethsv_noeeprom(0, 255, 64);
+#endif
     lcd_init(); // Known-good GPIO bootstrap then QMK HW SPI.
     cc_dirty = true;
 }
