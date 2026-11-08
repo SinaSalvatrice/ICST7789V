@@ -31,8 +31,10 @@
 // Keep the QP display awake while diagnosing the hardware.
 #define QUANTUM_PAINTER_DISPLAY_TIMEOUT 0
 
-// Optional, external WS2812/SK6812 chain; not the RP2040-Zero's on-board LED.
-// Only enabled when RGBLIGHT_ENABLE=yes in rules.mk.
+// External ten-pixel WS2812/SK6812 string (first pixel DIN on GP29).
+// For bring-up, keep power demand modest; RGBLight clips values at 64/255.
 #define WS2812_DI_PIN GP29
-#define RGBLIGHT_LED_COUNT 1
-#define RGBLIGHT_LIMIT_VAL 96
+#define RGBLIGHT_LED_COUNT 10
+#define RGBLIGHT_LIMIT_VAL 64
+// Every LED displays a different hue and the rainbow moves automatically.
+#define RGBLIGHT_EFFECT_RAINBOW_SWIRL
