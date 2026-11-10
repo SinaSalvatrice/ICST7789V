@@ -20,7 +20,35 @@
     "left_icon_px": 100,
     "header_px": 28,
     "footer_px": 25,
-    "animation": "quick-accent-notice"
+    "animation": "quick-accent-notice",
+    "module_menu": [
+      "DISPLAY",
+      "ENCODER",
+      "HOME",
+      "MATRIX",
+      "HELP",
+      "COLORS"
+    ],
+    "matrix_test": {
+      "kind": "live_key_matrix_test",
+      "layout": "physical_4_4_2",
+      "source": "physical_keys",
+      "shows": [
+        "K1-K10",
+        "row_col",
+        "pressed_released",
+        "currently_pressed_count",
+        "total_press_count",
+        "last_pressed_key"
+      ],
+      "exit": [
+        "K0_single",
+        "K0_triple",
+        "encoder_push",
+        "K0_double_to_home"
+      ],
+      "suppress_host_input": true
+    }
   },
   "gestures": {
     "tap_ms": 200,
@@ -31,11 +59,12 @@
     "k0": {
       "hardware_pin": "GP11",
       "dedicated_module_only": true,
-      "single": "toggle_display_macro_encoder_mode",
+      "single": "toggle_display_macro_encoder_mode_or_exit_matrix_test",
       "double": "open_home_display_mode",
       "hold": "open_module_menu",
       "tap_window_ms": 250,
-      "hold_ms": 620
+      "hold_ms": 620,
+      "triple": "toggle_matrix_test"
     },
     "encoder_push": {
       "display": "activate_preview_or_menu",
