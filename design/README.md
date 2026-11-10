@@ -28,9 +28,10 @@ K0 (GP11) ist **niemals Teil der 11er-Keymatrix** und sendet keine Host-Codes.
 |---|---|
 | 1× | Encoder zwischen Display- und Makromodus umschalten |
 | 2× | Home-Display aufrufen, ohne den aktiven PC-Makrolayer zu verändern |
+| 3× | Matrix-Test ein-/ausschalten (ohne PC-Tastencodes) |
 | Halten (620ms) | Modulmenü aufrufen und in den Displaymodus wechseln |
 
-K0-Einzel-/Doppeltipp werden getrennt mit 250ms ausgewertet.
+K0-Einzel-/Doppel-/Dreifachtipp werden nach einem 250-ms-Tippfenster ausgewertet. Die Doppeltipp-Aktion wird verzögert, damit Dreifachtipp zuverlässig möglich ist.
 Das ist unabhängig vom QMK-Tap-Dance-Fenster der zehn Tasten (200ms).
 
 ## Gemeinsamer Drehencoder
@@ -46,8 +47,31 @@ Das ist unabhängig vom QMK-Tap-Dance-Fenster der zehn Tasten (200ms).
 
 ## Modulmenü
 
-K0 halten öffnet: DISPLAY, ENCODER, HOME, HELP, COLORS.
+K0 halten öffnet: DISPLAY, ENCODER, HOME, MATRIX, HELP, COLORS.
 Das Diagnose-Farbbild bleibt als separate Menüseite verfügbar.
+
+
+## Matrix-Test (10 physische Tasten)
+
+**K0 3×** oder **K0 halten → mit Encoder MATRIX wählen → Encoder drücken**.
+
+Das Display stellt die echte 4–4–2-Anordnung mit hoher K5 und breiter K9 dar.
+Für K1–K10 werden die Matrixpositionen R0–R2/C0–C3 aus
+`design/layer_system.json → physical_keys` generiert.
+Gedrückte Tasten werden **grün**, beim Loslassen wieder dunkel.
+Die linke Seite zeigt Anzahl gleichzeitig gedrückter Tasten,
+Anzahl erkannter Druckvorgänge und die zuletzt gedrückte Taste samt
+Zeile/Spalte. Auch Mehrfachtastendrücke sind sichtbar.
+
+**Sicherheit:** Während MATRIX aktiv ist, verarbeitet das Modul die
+Tastendrücke lokal; QMK-Makros, Layerwechsel und HID-Ausgaben der Matrix
+werden unterdrückt. Der aktive Arbeitslayer bleibt unverändert.
+Zurück: K0 1× oder Encoder drücken; K0 3× schaltet den Test um,
+K0 2× zeigt Home. K0 halten öffnet das Modulmenü.
+
+Wenn eine Taste nicht aufleuchtet oder eine andere Taste angezeigt wird,
+prüfe die tatsächlich verlöteten Zeilen- und Spaltenleitungen. Die zwei
+unbelegten Matrixplätze sind weiterhin nicht als Tasten definiert.
 
 ## Sicherer lokaler Build
 
