@@ -1,6 +1,7 @@
 // 320x240 Layer Map runtime. Included only from keymap.c after SPI routines.
 #pragma once
 #include "cc_font.h"
+#include <stdio.h> // Compact numeric diagnostics for the matrix tester.
 #define CC_K0_TAPS_MS 250
 #define CC_K0_HOLD_MS 620
 #define CC_DEBOUNCE_MS 25
@@ -15,6 +16,16 @@ static bool cc_home_view = true;
 static bool cc_menu_view = false;
 static bool cc_help_view = false;
 static bool cc_color_view = false;
+static bool cc_matrix_test_view = false;
+// Physical switch status is tracked separately from QMK Tap Dance.
+static bool cc_matrix_down[CC_KEY_COUNT] = {false};
+static uint16_t cc_matrix_changed = 0;
+static uint16_t cc_matrix_hits = 0;
+static uint8_t cc_matrix_last_key = 255;
+static bool cc_matrix_full_redraw = true;
+static bool cc_matrix_return_home = true;
+static bool cc_matrix_return_encoder_mode = true;
+static uint8_t cc_matrix_return_preview = 0;
 static bool cc_dirty = true;
 static uint16_t cc_last_draw = 0;
 static uint16_t cc_held_code[CC_KEY_COUNT] = {0};
@@ -83,6 +94,7 @@ static void cc_activate_layer(uint8_t layer_index) {
     cc_menu_view = false;
     cc_help_view = false;
     cc_color_view = false;
+    cc_matrix_test_view = false;
     cc_last_key = 255;
     layer_move(layer_index); // Actual exclusive QMK layer.
     cc_dirty = true;
@@ -97,6 +109,7 @@ static void cc_open_home(void) {
     cc_menu_view = false;
     cc_help_view = false;
     cc_color_view = false;
+    cc_matrix_test_view = false;
     cc_dirty = true;
 }
 
@@ -105,6 +118,7 @@ static void cc_open_menu(void) {
     cc_menu_view = true;
     cc_help_view = false;
     cc_color_view = false;
+    cc_matrix_test_view = false;
     cc_menu_selection = 0;
     cc_dirty = true;
 }
@@ -114,6 +128,7 @@ static void cc_switch_encoder(bool display_mode) {
     cc_menu_view = false;
     cc_help_view = false;
     cc_color_view = false;
+    cc_matrix_test_view = false;
     if (!display_mode) {
         cc_preview = cc_active;
         cc_home_view = cc_active == 0;
@@ -174,18 +189,139 @@ static void cc_layer_screen(void) {
     }
 }
 
+// Physical matrix test: highlight held switches, count presses and display R/C.
+// No host keycodes or Tap Dance effects may escape while this view is active.
+static void cc_matrix_test_enter(void) {
+    if (cc_matrix_test_view) return;
+    cc_matrix_return_home = cc_home_view;
+    cc_matrix_return_preview = cc_preview;
+    cc_matrix_return_encoder_mode = cc_display_mode;
+    cc_matrix_test_view = true;
+    cc_menu_view = false;
+    cc_help_view = false;
+    cc_color_view = false;
+    cc_display_mode = true;
+    cc_matrix_last_key = 255;
+    cc_matrix_hits = 0;
+    for (uint8_t i = 0; i < CC_KEY_COUNT; ++i) cc_matrix_down[i] = false;
+    cc_matrix_changed = (1u << CC_KEY_COUNT) - 1u;
+    cc_matrix_full_redraw = true;
+    cc_dirty = true;
+}
+
+static void cc_matrix_test_exit(void) {
+    if (!cc_matrix_test_view) return;
+    cc_matrix_test_view = false;
+    cc_home_view = cc_matrix_return_home;
+    cc_preview = cc_matrix_return_preview;
+    cc_display_mode = cc_matrix_return_encoder_mode;
+    cc_matrix_changed = 0;
+    cc_matrix_full_redraw = false;
+    cc_dirty = true;
+}
+
+static void cc_matrix_test_toggle(void) {
+    if (cc_matrix_test_view) cc_matrix_test_exit();
+    else cc_matrix_test_enter();
+}
+
+// The physical row/column mapping is generated from design/layer_system.json.
+static void cc_matrix_test_record(uint8_t row, uint8_t col, bool pressed) {
+    for (uint8_t i = 0; i < CC_KEY_COUNT; ++i) {
+        if (row == cc_matrix_row[i] && col == cc_matrix_col[i]) {
+            if (cc_matrix_down[i] != pressed) {
+                cc_matrix_down[i] = pressed;
+                cc_matrix_changed |= (uint16_t)(1u << i);
+                if (pressed) {
+                    cc_matrix_last_key = i;
+                    if (cc_matrix_hits != UINT16_MAX) ++cc_matrix_hits;
+                }
+                cc_dirty = true;
+            }
+            return;
+        }
+    }
+}
+
+static void cc_matrix_key_tile(uint8_t i) {
+    const cc_key_shape_t *shape = &cc_key_shapes[i];
+    const uint16_t x = shape->x;
+    const uint16_t y = shape->y;
+    const uint16_t w = shape->w;
+    const uint16_t h = shape->h;
+    const bool down = cc_matrix_down[i];
+    const uint16_t background = down ? 0x05E7 : 0x29E8;
+    const uint16_t foreground = down ? C_WHITE : 0xC618;
+    lcd_fill(x, y, w, h, background);
+    lcd_fill(x, y, w, down ? 5 : 2, down ? C_GREEN : 0x426A);
+    char id[4] = {'K', (char)('0' + (i + 1) / 10),
+                       (char)('0' + (i + 1) % 10), 0};
+    char position[5] = {'R', (char)('0' + cc_matrix_row[i]),
+                        'C', (char)('0' + cc_matrix_col[i]), 0};
+    cc_draw_text(x + 5, y + 11, id, 1, foreground);
+    cc_draw_text(x + 5, y + 27, position, 1, foreground);
+    if (h > 70) cc_draw_text(x + 5, y + 65, down ? "DOWN" : "UP", 1, foreground);
+}
+
+static void cc_matrix_test_status(void) {
+    lcd_fill(8, 115, 107, 89, 0x2186);
+    uint8_t active = 0;
+    for (uint8_t i = 0; i < CC_KEY_COUNT; ++i) {
+        if (cc_matrix_down[i]) ++active;
+    }
+    char count[6];
+    (void)snprintf(count, sizeof(count), "%02u", (unsigned)active);
+    cc_draw_text(13, 126, "DOWN", 1, C_CYAN);
+    cc_draw_text(71, 126, count, 1, C_WHITE);
+    (void)snprintf(count, sizeof(count), "%u", (unsigned)cc_matrix_hits);
+    cc_draw_text(13, 143, "HITS", 1, C_CYAN);
+    cc_draw_text(13, 157, count, 1, C_WHITE);
+    if (cc_matrix_last_key == 255) {
+        cc_draw_text(13, 175, "LAST -", 1, C_WHITE);
+    } else {
+        const uint8_t i = cc_matrix_last_key;
+        char last[5] = {'K', (char)('0' + (i + 1) / 10),
+                            (char)('0' + (i + 1) % 10), 0};
+        char rc[5] = {'R', (char)('0' + cc_matrix_row[i]),
+                          'C', (char)('0' + cc_matrix_col[i]), 0};
+        cc_draw_text(13, 175, last, 1, C_YELLOW);
+        cc_draw_text(13, 190, rc, 1, C_WHITE);
+    }
+}
+
+static void cc_matrix_test_screen(void) {
+    if (cc_matrix_full_redraw) {
+        cc_background();
+        lcd_fill(7, 33, 109, 171, 0x2186);
+        lcd_fill(7, 33, 109, 4, C_CYAN);
+        cc_draw_text(13, 55, "MATRIX", 2, C_WHITE);
+        cc_draw_text(13, 87, "4-4-2", 1, C_CYAN);
+        cc_draw_text(13, 102, "KEY TEST", 1, C_WHITE);
+        lcd_fill(0, 216, LCD_W, 24, 0x18C7);
+        cc_draw_text(7, 225, "K0 1X EXIT 3X TOGGLE / PUSH EXIT", 1, C_CYAN);
+        cc_matrix_changed = (1u << CC_KEY_COUNT) - 1u;
+        cc_matrix_full_redraw = false;
+    }
+    const uint16_t changed = cc_matrix_changed;
+    cc_matrix_changed = 0;
+    for (uint8_t i = 0; i < CC_KEY_COUNT; ++i) {
+        if (changed & (1u << i)) cc_matrix_key_tile(i);
+    }
+    cc_matrix_test_status();
+}
+
 static void cc_menu_screen(void) {
-    static const char *options[5] = {"DISPLAY", "ENCODER", "HOME", "HELP", "COLORS"};
+    static const char *options[6] = {"DISPLAY", "ENCODER", "HOME", "MATRIX", "HELP", "COLORS"};
     cc_background();
     lcd_fill(7, 33, 109, 171, 0x2186);
     cc_draw_text(17, 64, "MODULE", 2, C_CYAN);
     cc_draw_text(15, 105, "K0 ONLY", 1, C_WHITE);
     cc_draw_text(16, 164, "NO USB", 1, C_YELLOW);
-    for (uint8_t i = 0; i < 5; ++i) {
-        const uint16_t y = 36 + i * 34;
-        lcd_fill(125, y, 187, 29, cc_menu_selection == i ? 0x2C96 : 0x2145);
-        lcd_fill(125, y, 4, 29, cc_menu_selection == i ? C_CYAN : 0x4AAB);
-        cc_draw_text(141, y + 10, options[i], 1, C_WHITE);
+    for (uint8_t i = 0; i < 6; ++i) {
+        const uint16_t y = 34 + i * 29;
+        lcd_fill(125, y, 187, 25, cc_menu_selection == i ? 0x2C96 : 0x2145);
+        lcd_fill(125, y, 4, 25, cc_menu_selection == i ? C_CYAN : 0x4AAB);
+        cc_draw_text(141, y + 9, options[i], 1, C_WHITE);
     }
 }
 
@@ -194,11 +330,12 @@ static void cc_help_screen(void) {
     cc_draw_text(12, 40, "MODULE HELP", 2, C_CYAN);
     cc_draw_text(12, 78, "K0 1X  DISP/ENC", 1, C_WHITE);
     cc_draw_text(12, 96, "K0 2X  HOME", 1, C_WHITE);
-    cc_draw_text(12, 114, "K0 HOLD  MENU", 1, C_WHITE);
-    cc_draw_text(12, 132, "KEY 1X  MACRO", 1, C_WHITE);
-    cc_draw_text(12, 150, "KEY 2X  LAYER", 1, C_WHITE);
-    cc_draw_text(12, 168, "KEY HOLD  ALT", 1, C_WHITE);
-    cc_draw_text(12, 186, "K10 3X  PREV", 1, C_YELLOW);
+    cc_draw_text(12, 114, "K0 3X  MATRIX", 1, C_CYAN);
+    cc_draw_text(12, 129, "K0 HOLD  MENU", 1, C_WHITE);
+    cc_draw_text(12, 147, "KEY 1X  MACRO", 1, C_WHITE);
+    cc_draw_text(12, 162, "KEY 2X  LAYER", 1, C_WHITE);
+    cc_draw_text(12, 177, "KEY HOLD  ALT", 1, C_WHITE);
+    cc_draw_text(12, 192, "K10 3X  PREV", 1, C_YELLOW);
 }
 
 static void cc_color_screen(void) {
@@ -214,7 +351,8 @@ static void cc_color_screen(void) {
 
 static void cc_redraw(void) {
     if (!panel_ready) return;
-    if (cc_color_view) cc_color_screen();
+    if (cc_matrix_test_view) cc_matrix_test_screen();
+    else if (cc_color_view) cc_color_screen();
     else if (cc_help_view) cc_help_screen();
     else if (cc_menu_view) cc_menu_screen();
     else cc_layer_screen();
