@@ -84,6 +84,10 @@ def generate_header(data):
                  40+k["y"]*55, 43+(k["w"]-1)*47, 47+(k["h"]-1)*55)
              for k in data["physical_keys"]),
            "};",
+           "static const uint8_t cc_matrix_row[CC_KEY_COUNT] = {" +
+           ", ".join(str(k["row"]) for k in data["physical_keys"]) + "};",
+           "static const uint8_t cc_matrix_col[CC_KEY_COUNT] = {" +
+           ", ".join(str(k["col"]) for k in data["physical_keys"]) + "};",
            "static const uint8_t cc_double_target[CC_KEY_COUNT] = {" +
            ", ".join(str(ids.index(i)) for i in data["home_double_targets"]) + "};",
            "static const cc_layer_desc_t cc_layers[CC_LAYER_COUNT] = {"]
