@@ -38,7 +38,7 @@
       "GP28"
     ]
   },
-  "diode_direction": "COL2ROW",
+  "diode_direction": "ROW2COL",
   "debounce": 5,
   "layouts": {
     "LAYOUT": {
