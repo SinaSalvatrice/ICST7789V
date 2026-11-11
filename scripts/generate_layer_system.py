@@ -34,15 +34,22 @@ def validate(data):
     assert data["wide_key"] == 9 and data["tall_key"] == 5
     assert len(keys) == 10 and len(data["home_double_targets"]) == 10
     assert [k["id"] for k in keys] == ["K"+str(i) for i in range(1,11)]
-    assert {(k["row"],k["col"]) for k in keys} == {
-        (0,0),(0,1),(0,2),(0,3),(1,0),(1,1),(1,2),(1,3),(2,1),(2,3)
-    }
+    # Switch positions must be unique, but exact row/column assignments are
+    # wiring-specific and belong to design/layer_system.json, not this script.
+    assert len({(k["row"], k["col"]) for k in keys}) == len(keys), (
+        "Duplicate physical matrix position"
+    )
     assert len({(k["x"]+dx,k["y"]+dy) for k in keys
                 for dx in range(k["w"]) for dy in range(k["h"])}) == 12
     assert all(k["x"] >= 0 and k["y"] >= 0 and
                k["x"]+k["w"] <= 4 and k["y"]+k["h"] <= 3 for k in keys)
     assert keys[4]["h"] == 2 and keys[8]["w"] == 2
     layout = json.loads((ROOT/"keyboards/icst7789v/keyboard.json").read_text(encoding="utf-8"))
+    rows = len(layout["matrix_pins"]["rows"])
+    cols = len(layout["matrix_pins"]["cols"])
+    assert all(0 <= k["row"] < rows and 0 <= k["col"] < cols for k in keys), (
+        "Key matrix position outside configured GPIO rows/columns"
+    )
     assert len(layout["layouts"]["LAYOUT"]["layout"]) == 10
     for physical, switch in zip(keys, layout["layouts"]["LAYOUT"]["layout"]):
         assert switch["matrix"] == [physical["row"], physical["col"]]
